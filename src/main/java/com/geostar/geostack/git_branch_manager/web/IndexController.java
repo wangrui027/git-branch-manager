@@ -49,18 +49,12 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping({"cloneOrPull", "/cloneOrPull/{name}"})
-    public String cloneOrPull(Model model, @PathVariable(value = "name", required = false) String inputProjectName) {
+    @RequestMapping({"cloneOrPull"})
+    public String cloneOrPull(Model model) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
-                if (inputProjectName != null) {
-                    if (inputProjectName.equals(gitProject.getName())) {
-                        gitRepositoryService.cloneOrPull(gitProject);
-                    }
-                } else {
-                    gitRepositoryService.cloneOrPull(gitProject);
-                }
+                gitRepositoryService.cloneOrPull(gitProject);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -81,19 +75,12 @@ public class IndexController {
      * @param branchName
      * @return
      */
-    @RequestMapping({"/createBranch/{branchName}", "/createBranch/{branchName}/{projectName}"})
-    public String createBranch(Model model, @PathVariable("branchName") String branchName,
-                               @PathVariable(value = "projectName", required = false) String inputProjectName) {
+    @RequestMapping({"/createBranch/{branchName}"})
+    public String createBranch(Model model, @PathVariable("branchName") String branchName) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
-                if (inputProjectName != null) {
-                    if (inputProjectName.equals(gitProject.getName())) {
-                        gitRepositoryService.createBranch(gitProject, branchName);
-                    }
-                } else {
-                    gitRepositoryService.createBranch(gitProject, branchName);
-                }
+                gitRepositoryService.createBranch(gitProject, branchName);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -115,20 +102,12 @@ public class IndexController {
      * @param branchName
      * @return
      */
-    @RequestMapping({"/switchBranch/{branchName}", "/switchBranch/{branchName}/{projectName}"})
-    public String switchBranchAll(Model model, @PathVariable("branchName") String branchName,
-                                  @PathVariable(value = "projectName", required = false) String inputProjectName) {
-
+    @RequestMapping({"/switchBranch/{branchName}"})
+    public String switchBranchAll(Model model, @PathVariable("branchName") String branchName) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
-                if (inputProjectName != null) {
-                    if (inputProjectName.equals(gitProject.getName())) {
-                        gitRepositoryService.switchBranch(gitProject, branchName);
-                    }
-                } else {
-                    gitRepositoryService.switchBranch(gitProject, branchName);
-                }
+                gitRepositoryService.switchBranch(gitProject, branchName);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -148,19 +127,13 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping({"/push", "/push/{projectName}"})
-    public String push(Model model, @PathVariable(value = "projectName", required = false) String inputProjectName) {
+    @RequestMapping({"/push/{message}"})
+    public String push(Model model, @PathVariable(value = "message") String inputMessage) {
 
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
-                if (inputProjectName != null) {
-                    if (inputProjectName.equals(gitProject.getName())) {
-                        gitRepositoryService.push(gitProject);
-                    }
-                } else {
-                    gitRepositoryService.push(gitProject);
-                }
+                gitRepositoryService.push(gitProject, inputMessage);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -178,21 +151,14 @@ public class IndexController {
      * 删除项目的当前分支，不允许删除master和develop
      *
      * @param model
-     * @param inputProjectName
      * @return
      */
-    @RequestMapping({"/deleteBranch", "/deleteBranch/{projectName}"})
-    public String deleteBranch(Model model, @PathVariable(value = "projectName", required = false) String inputProjectName) {
+    @RequestMapping({"/deleteBranch"})
+    public String deleteBranch(Model model) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
-                if (inputProjectName != null) {
-                    if (inputProjectName.equals(gitProject.getName())) {
-                        gitRepositoryService.deleteBranch(gitProject);
-                    }
-                } else {
-                    gitRepositoryService.deleteBranch(gitProject);
-                }
+                gitRepositoryService.deleteBranch(gitProject);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();
