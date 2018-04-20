@@ -1,0 +1,24 @@
+/* contentDiv */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.contentDiv {
+    padding: 20px 60px;
+}
+
+.table>thead>tr>td, .table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+.custom-a {
+    margin: 5px;
+}
+
+#deleteBranchName {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
