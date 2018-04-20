@@ -115,6 +115,11 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
              */
             getAllRemoteBranch(gitProject);
             git.close();
+        } else {
+            gitProject.setCurrBranch(null);
+            gitProject.setLastCommitId(null);
+            gitProject.setLastCommitUser(null);
+            gitProject.setLastCommitDate(null);
         }
         return true;
     }
@@ -156,10 +161,12 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     }
 
     @Override
-    public boolean push(GitProject gitProject) throws IOException, GitAPIException {
+    public boolean push(GitProject gitProject, String message) throws IOException, GitAPIException {
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
+        git.add().addFilepattern(".").call();
+        git.commit().setAll(true).setMessage(message).call();
         git.push().setCredentialsProvider(allowHosts).call();
         git.close();
         return false;
@@ -179,7 +186,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             if (refName.equals(remoteBranchPrefix + gitProject.getCurrBranch())) {
                 RefSpec refSpec = new RefSpec()
                         .setSource(null)
-                        .setDestination("refs/heads/"+gitProject.getCurrBranch());
+                        .setDestination("refs/heads/" + gitProject.getCurrBranch());
                 git.push().setRefSpecs(refSpec).setRemote(ORIGIN).call();
                 break;
             }

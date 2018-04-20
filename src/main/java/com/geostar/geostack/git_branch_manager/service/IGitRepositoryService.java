@@ -47,7 +47,7 @@ public interface IGitRepositoryService {
      * @param gitProject
      * @return
      */
-    boolean push(GitProject gitProject) throws IOException, GitAPIException;
+    boolean push(GitProject gitProject, String message) throws IOException, GitAPIException;
 
     /**
      * 删除当前分支分支
