@@ -1,4 +1,4 @@
 work-home: E:\git-repository
 projects:
- - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/GeoCloudActiveMQClient.git
- - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-3rd-framework.git
+ - git@git.coding.net:nihaorz/branch-test1.git
+ - git@git.coding.net:nihaorz/branch-test2.git
