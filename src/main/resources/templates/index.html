@@ -8,7 +8,7 @@
     <link th:href="@{/css/default.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/bootstrap-3.3.7/js/bootstrap.js}"></script>
-    <title>GeoStack GitLab 功能模块仓库管理</title>
+    <title>Git分支管理</title>
 </head>
 <body>
 <div class="contentDiv">
@@ -21,7 +21,7 @@
         <th>当前分支</th>
         <th>最后提交id</th>
         <th>最后提交人</th>
-        <th>最后时间</th>
+        <th>最后提交时间</th>
         </thead>
         <tbody>
         <tr th:each="project : ${projects}">
@@ -47,9 +47,9 @@
                         onclick="checkoutAll(this)"></a></li>
             </ul>
         </div>
-        <button class="btn btn-primary custom-a" onclick="pushAll();">推送代码</button>
+        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#pushModal">推送代码</button>
         <button class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
-                th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != 'master'}">删除当前分支
+                th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != 'master' and projects[0].currBranch != 'develop'}">删除当前分支
         </button>
     </div>
     <hr/>
@@ -71,7 +71,7 @@
      */
     function createBranchAll() {
         var branchName = $("#newBranchName").val();
-        if (branchName != null) {
+        if (branchName != "") {
             window.location.href = "/createBranch/" + branchName;
         }
     }
@@ -81,7 +81,7 @@
      */
     function checkoutAll(obj) {
         var branchName = $(obj).html();
-        if (branchName != null) {
+        if (branchName != "") {
             window.location.href = "/switchBranch/" + branchName;
         }
     }
@@ -90,7 +90,13 @@
      * 推送代码
      */
     function pushAll() {
-        window.location.href = "/push";
+        $('#pushModal').modal('hide');
+        var pushLog = $("#inputPushLog").val();
+        if (pushLog != "") {
+            window.location.href = "/push/" + pushLog;
+        } else {
+            $('#pushErrorModal').modal('show');
+        }
     }
 
     function openDeleteBranchModal() {
@@ -112,7 +118,64 @@
     }
 
 </script>
-<!-- 删除分支模态框（Modal） -->
+<!-- 推送代码错误模态框（Modal） -->
+<div class="modal fade" id="pushErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    提交日志为空
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    请输入提交日志
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 推送代码模态框（Modal） -->
+<div class="modal fade" id="pushModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    推送代码
+                </h4>
+            </div>
+            <div class="modal-body">
+                <a
+                        th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != branch}" th:text="${branch}"
+                        href="javascript:void(0);"
+                        onclick="checkoutAll(this)"></a>
+                <p>
+                    推送分支：<label id="pushBranchName" th:if="${! #lists.isEmpty(projects)}" th:text="${projects[0].currBranch}"></label>
+                </p>
+                <p>
+                    提交日志：<input id="inputPushLog"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="pushAll()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 删除分支错误模态框（Modal） -->
 <div class="modal fade" id="deleteErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -210,11 +273,11 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <p><strong>拉取代码：</strong>拉取当前分支最新代码，第一次直接拉取master分支</p>
+                <p><strong>拉取代码：</strong>拉取当前分支最新代码，第一次直接拉取<strong> master </strong>分支</p>
                 <p><strong>创建分支：</strong>以当前分支为基础创建新的分支</p>
                 <p><strong>切换分支：</strong>切换到指定分支并拉取最新代码</p>
-                <p><strong>删除分支：</strong>删除指定分支，不能删除当前工作分支、master分支和develop分支</p>
                 <p><strong>推送代码：</strong>推送当前分支代码到远程仓库</p>
+                <p><strong>删除分支：</strong>删除指定分支，不能删除当前工作分支、master分支和develop分支</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">
