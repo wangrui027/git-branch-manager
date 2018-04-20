@@ -37,4 +37,5 @@ public class GitRepositoryConfig {
             gitProjects.add(gitProject);
         }
     }
+
 }
