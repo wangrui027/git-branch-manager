@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GeoStackGitBranchManagerApplication {
+public class GitBranchManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GeoStackGitBranchManagerApplication.class, args);
+        SpringApplication.run(GitBranchManagerApplication.class, args);
     }
 
 }
