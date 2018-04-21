@@ -63,4 +63,13 @@ public interface IGitRepositoryService {
      * @return
      */
     List<String> getBranchIntersect(List<GitProject> projects);
+
+    /**
+     * 创建标签
+     * @param gitProject
+     * @param tagName
+     * @param tagLog
+     * @return
+     */
+    boolean createTag(GitProject gitProject, String tagName, String tagLog) throws IOException, GitAPIException;
 }

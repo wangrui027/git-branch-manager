@@ -129,7 +129,6 @@ public class IndexController {
      */
     @RequestMapping({"/push/{message}"})
     public String push(Model model, @PathVariable(value = "message") String inputMessage) {
-
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -159,6 +158,33 @@ public class IndexController {
         for (GitProject gitProject : projects) {
             try {
                 gitRepositoryService.deleteBranch(gitProject);
+                gitRepositoryService.updateGitProjectInfo(gitProject);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }
+        }
+        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
+        model.addAttribute("projects", projects);
+        model.addAttribute("branchIntersect", branchIntersect);
+        return "index";
+    }
+
+    /**
+     * 创建标签
+     *
+     * @param model
+     * @param tagName
+     * @param tagLog
+     * @return
+     */
+    @RequestMapping({"/createTag/{tagName}/{tagLog}"})
+    public String createTag(Model model, @PathVariable(value = "tagName") String tagName, @PathVariable(value = "tagLog") String tagLog) {
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            try {
+                gitRepositoryService.createTag(gitProject, tagName, tagLog);
                 gitRepositoryService.updateGitProjectInfo(gitProject);
             } catch (IOException e) {
                 e.printStackTrace();

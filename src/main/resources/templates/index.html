@@ -47,9 +47,11 @@
                         onclick="checkoutAll(this)"></a></li>
             </ul>
         </div>
+        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#createTagModal">创建标签</button>
         <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#pushModal">推送代码</button>
         <button class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
-                th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != 'master' and projects[0].currBranch != 'develop'}">删除当前分支
+                th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != 'master' and projects[0].currBranch != 'develop'}">
+            删除当前分支
         </button>
     </div>
     <hr/>
@@ -117,7 +119,81 @@
         }
     }
 
+    /**
+     * 创建标签
+     */
+    function createTag() {
+        $('#createTagModal').modal('hide');
+        var tagName = $("#inputTagName").val();
+        var tagLog = $("#inputTagLog").val();
+        if (tagName != "" && tagLog != "") {
+            window.location.href = "/createTag/" + tagName + "/" + tagLog;
+        } else {
+            $('#createTagErrorModal').modal('show');
+        }
+    }
+
 </script>
+<!-- 创建标签错误模态框（Modal） -->
+<div class="modal fade" id="createTagErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    标签创建失败
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    请输入标签名和标签日志
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 创建标签模态框（Modal） -->
+<div class="modal fade" id="createTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    创建分支
+                </h4>
+            </div>
+            <div class="modal-body">
+                <a
+                        th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != branch}" th:text="${branch}"
+                        href="javascript:void(0);"
+                        onclick="checkoutAll(this)"></a>
+                <p>
+                    工作分支：<label th:if="${! #lists.isEmpty(projects)}" th:text="${projects[0].currBranch}"></label>
+                </p>
+                <p>
+                    标签名称：<input id="inputTagName"/>
+                </p>
+                <p>
+                    提交日志：<input id="inputTagLog"/>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="createTag()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 推送代码错误模态框（Modal） -->
 <div class="modal fade" id="pushErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -161,7 +237,8 @@
                         href="javascript:void(0);"
                         onclick="checkoutAll(this)"></a>
                 <p>
-                    推送分支：<label id="pushBranchName" th:if="${! #lists.isEmpty(projects)}" th:text="${projects[0].currBranch}"></label>
+                    推送分支：<label id="pushBranchName" th:if="${! #lists.isEmpty(projects)}"
+                                th:text="${projects[0].currBranch}"></label>
                 </p>
                 <p>
                     提交日志：<input id="inputPushLog"/>

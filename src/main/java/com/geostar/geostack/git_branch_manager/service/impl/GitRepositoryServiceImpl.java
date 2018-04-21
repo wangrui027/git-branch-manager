@@ -167,7 +167,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         Git git = Git.open(file);
         git.add().addFilepattern(".").call();
         git.commit().setAll(true).setMessage(message).call();
-        git.push().setCredentialsProvider(allowHosts).call();
+        git.push().setPushTags().setCredentialsProvider(allowHosts).call();
         git.close();
         return false;
     }
@@ -205,6 +205,16 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             }
         }
         return list;
+    }
+
+    @Override
+    public boolean createTag(GitProject gitProject, String tagName, String tagLog) throws IOException, GitAPIException {
+        String workHome = gitRepositoryConfig.getWorkHome();
+        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        Git git = Git.open(file);
+        git.tag().setName(tagName).setMessage(tagLog).call();
+        git.close();
+        return false;
     }
 
     /**
