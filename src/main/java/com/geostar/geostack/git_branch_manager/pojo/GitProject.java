@@ -22,9 +22,19 @@ public class GitProject {
     private String lastCommitId;
 
     /**
+     * 最后提交日志
+     */
+    private String lastCommitMessage;
+
+    /**
      * 最后提交人
      */
     private String lastCommitUser;
+
+    /**
+     * 最后提交邮箱
+     */
+    private String lastCommitEmail;
 
     /**
      * 最后提交时间
@@ -70,12 +80,28 @@ public class GitProject {
         this.lastCommitId = lastCommitId;
     }
 
+    public String getLastCommitMessage() {
+        return lastCommitMessage;
+    }
+
+    public void setLastCommitMessage(String lastCommitMessage) {
+        this.lastCommitMessage = lastCommitMessage;
+    }
+
     public String getLastCommitUser() {
         return lastCommitUser;
     }
 
     public void setLastCommitUser(String lastCommitUser) {
         this.lastCommitUser = lastCommitUser;
+    }
+
+    public String getLastCommitEmail() {
+        return lastCommitEmail;
+    }
+
+    public void setLastCommitEmail(String lastCommitEmail) {
+        this.lastCommitEmail = lastCommitEmail;
     }
 
     public String getCurrBranch() {

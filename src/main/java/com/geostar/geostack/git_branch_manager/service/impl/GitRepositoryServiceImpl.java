@@ -99,7 +99,9 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     public boolean updateGitProjectInfo(GitProject gitProject) throws IOException, GitAPIException {
         gitProject.setCurrBranch(null);
         gitProject.setLastCommitId(null);
+        gitProject.setLastCommitMessage(null);
         gitProject.setLastCommitUser(null);
+        gitProject.setLastCommitEmail(null);
         gitProject.setLastCommitDate(null);
         gitProject.getBranchList().clear();
         gitProject.getTagList().clear();
@@ -113,7 +115,9 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             try {
                 RevCommit commit = git.log().call().iterator().next();
                 gitProject.setLastCommitId(commit.getId().getName());
-                gitProject.setLastCommitUser(commit.getAuthorIdent().getEmailAddress());
+                gitProject.setLastCommitMessage(commit.getShortMessage());
+                gitProject.setLastCommitUser(commit.getAuthorIdent().getName());
+                gitProject.setLastCommitEmail(commit.getAuthorIdent().getEmailAddress());
                 gitProject.setLastCommitDate(new Date(new Long(commit.getCommitTime()) * 1000));
             } catch (NoHeadException e) {
                 logger.warn("当前仓库没有任何提交信息，仓库地址：" + gitProject.getRemoteUrl());
@@ -228,7 +232,10 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         Status status = git.status().call();
-        if (status.hasUncommittedChanges()) {
+        /**
+         * 如果是本地分支或者有修改则提交代码
+         */
+        if (getBranchType(git, gitProject.getCurrBranch()) == BranchTypeEnum.LOCAL || status.hasUncommittedChanges()) {
             git.add().addFilepattern(".").call();
             git.commit().setAll(true).setMessage(message).call();
             git.push().setPushAll().setCredentialsProvider(allowHosts).call();
