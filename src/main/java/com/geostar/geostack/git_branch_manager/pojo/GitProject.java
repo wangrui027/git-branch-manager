@@ -41,6 +41,11 @@ public class GitProject {
      */
     private final List<String> branchList = new ArrayList<>();
 
+    /**
+     * 标签集合
+     */
+    private final List<String> tagList = new ArrayList<>();
+
     public String getName() {
         return name;
     }
@@ -91,6 +96,10 @@ public class GitProject {
 
     public List<String> getBranchList() {
         return branchList;
+    }
+
+    public List<String> getTagList() {
+        return tagList;
     }
 
 }
