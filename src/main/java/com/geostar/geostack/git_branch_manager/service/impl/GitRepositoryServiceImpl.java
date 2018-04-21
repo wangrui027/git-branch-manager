@@ -1,5 +1,6 @@
 package com.geostar.geostack.git_branch_manager.service.impl;
 
+import com.geostar.geostack.git_branch_manager.common.BranchTypeEnum;
 import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
@@ -144,20 +145,65 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
             Git git = Git.open(file);
-            List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
-            String remoteBranchPrefix = "refs/remotes/origin/";
-            for (Ref ref : refs) {
-                String refName = ref.getName();
-                if (refName.equals(remoteBranchPrefix + branchName)) {
-                    git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).call();
-                    break;
-                }
+            BranchTypeEnum branchType = getBranchType(git, branchName);
+            if (BranchTypeEnum.REMOTE == branchType) {
+                git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).call();
             }
             git.checkout().setName(branchName).call();
             git.close();
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取分支类型，不负责关闭Git对象
+     *
+     * @param git
+     * @param branch 分支名称
+     * @return
+     */
+    private BranchTypeEnum getBranchType(Git git, String branch) {
+        boolean isLocalBranch = false;
+        boolean isRemoteBranch = false;
+        try {
+            List<Ref> localRefs = git.branchList().call();
+            String localBranchPrefix = "refs/heads/";
+            for (Ref ref : localRefs) {
+                String refName = ref.getName();
+                if (refName.equals(localBranchPrefix + branch)) {
+                    isLocalBranch = true;
+                    break;
+                }
+            }
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+            return BranchTypeEnum.ERROR;
+        }
+        try {
+            List<Ref> remoteRefs = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
+            String remoteBranchPrefix = "refs/remotes/origin/";
+            for (Ref ref : remoteRefs) {
+                String refName = ref.getName();
+                if (refName.equals(remoteBranchPrefix + branch)) {
+                    isRemoteBranch = true;
+                    break;
+                }
+            }
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+            return BranchTypeEnum.ERROR;
+        }
+        if (isLocalBranch && isRemoteBranch) {
+            return BranchTypeEnum.LOCAL_AND_REMOTE;
+        }
+        if (isLocalBranch) {
+            return BranchTypeEnum.LOCAL;
+        }
+        if (isRemoteBranch) {
+            return BranchTypeEnum.REMOTE;
+        }
+        return BranchTypeEnum.NOT_EXIST;
     }
 
     @Override
