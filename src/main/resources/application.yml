@@ -1,6 +1,6 @@
 server:
   port: 8090
-work-home: E:\git-repository
+work-home: D:\git-repository
 projects:
  - git@git.coding.net:nihaorz/branch-test1.git
  - git@git.coding.net:nihaorz/branch-test2.git
