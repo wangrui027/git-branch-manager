@@ -42,7 +42,7 @@
             </button>
             <ul class="dropdown-menu" role="menu">
                 <li th:each="branch : ${branchIntersect}"><a
-                        th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != branch}" th:text="${branch}"
+                        th:if="${!#lists.isEmpty(projects) and projects[0].currBranch != branch}" th:text="${branch}"
                         href="javascript:void(0);"
                         onclick="checkoutAll(this)"></a></li>
             </ul>
@@ -50,9 +50,10 @@
         <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#createTagModal">创建标签</button>
         <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#pushModal">推送代码</button>
         <button class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
-                th:if="${!#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}">
+                th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}">
             删除当前分支
         </button>
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-danger custom-a" data-toggle="modal" data-target="#deleteTagModal">删除标签</button>
     </div>
     <hr/>
     <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
@@ -134,6 +135,37 @@
     }
 
 </script>
+<!-- 删除模态框（Modal） -->
+<div class="modal fade" id="deleteTagModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    删除标签
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    标签删除操作后需要点击【推送代码】按钮，远程仓库才会删除。点击【确定】按钮后，如果需要撤销，请点击拉取【拉取代码】按钮撤销删除。
+                </p>
+                <p>
+                    请选择要删除的标签
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 创建标签错误模态框（Modal） -->
 <div class="modal fade" id="createTagErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
