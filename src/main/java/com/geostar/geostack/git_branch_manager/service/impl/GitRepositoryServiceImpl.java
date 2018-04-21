@@ -121,6 +121,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             gitProject.setLastCommitId(null);
             gitProject.setLastCommitUser(null);
             gitProject.setLastCommitDate(null);
+            gitProject.getBranchList().clear();
         }
         return true;
     }
