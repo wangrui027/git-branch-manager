@@ -15,7 +15,8 @@
     <legend>
         <strong><a href="/">仓库列表</a></strong>
     </legend>
-    <label style="font-size: 16px;">当前工作分支：<span th:if="${!#lists.isEmpty(projects)}" th:text="${projects[0].currBranch}">master</span></label>
+    <label style="font-size: 16px;">当前工作分支：<span th:if="${!#lists.isEmpty(projects)}"
+                                                 th:text="${projects[0].currBranch}">master</span></label>
     <table class="table table-hover table-bordered">
         <colgroup>
             <col style="width: 240px;">
@@ -38,15 +39,21 @@
             <td th:text="${project.name}" th:title="${project.remoteUrl}"></td>
             <td th:text="${project.lastCommitId}"></td>
             <td th:text="${project.lastCommitMessage}"></td>
-            <td th:text="${project.lastCommitUser + '（' + project.lastCommitEmail} + '）'"></td>
+            <td th:if="${project.lastCommitUser eq null}"></td>
+            <td th:if="${project.lastCommitUser ne null} "
+                th:text="${project.lastCommitUser + '（' + project.lastCommitEmail} + '）'"></td>
             <td th:text="${#dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></td>
-            <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);" onclick="copyPath(this)">复制地址</a></td>
+            <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);"
+                   onclick="copyPath(this)">复制地址</a></td>
         </tr>
         </tbody>
     </table>
     <div>
-        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip" title="拉取当前分支最新源代码，第一次直接拉取master分支">拉取代码</button>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal" data-target="#createBranchModal">创建分支
+        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip"
+                title="拉取当前分支最新源代码，第一次直接拉取master分支">拉取代码
+        </button>
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+                data-target="#createBranchModal">创建分支
         </button>
         <div th:if="${!#lists.isEmpty(branchIntersect)}" class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">切换分支
@@ -59,10 +66,12 @@
                         onclick="checkoutAll(this)"></a></li>
             </ul>
         </div>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch eq 'master'}"
+                class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#createTagModal">创建标签
         </button>
-        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master'}" class="btn btn-primary custom-a" data-toggle="modal"
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master'}"
+                class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#pushModal">推送代码
         </button>
         <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}"
@@ -86,7 +95,7 @@
 
     $("[data-toggle='tooltip']").tooltip();
 
-    function copyPath(obj){
+    function copyPath(obj) {
         var path = $(obj).attr("path");
         globalCopyTextarea.value = path;
         globalCopyTextarea.select();
