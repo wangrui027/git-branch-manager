@@ -36,7 +36,7 @@
         </tbody>
     </table>
     <div>
-        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip" title="拉取当前分支最新源代码">拉取代码</button>
+        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip" title="拉取当前分支最新源代码，第一次直接拉取master分支">拉取代码</button>
         <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal" data-target="#createBranchModal">创建分支
         </button>
         <div th:if="${!#lists.isEmpty(branchIntersect)}" class="btn-group">
