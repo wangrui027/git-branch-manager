@@ -16,6 +16,10 @@ import java.util.List;
 @RequestMapping("/")
 public class IndexController {
 
+    /**
+     * 首页对应的模板名称
+     */
+    private static final String INDEX_HTML = "list";
     @Resource
     private IGitRepositoryService gitRepositoryService;
 
@@ -25,8 +29,9 @@ public class IndexController {
      * @return
      */
     @RequestMapping("/")
-    public String index() {
-        return "index";
+    public String index(Model model) {
+        list(model);
+        return INDEX_HTML;
     }
 
     /**
@@ -75,7 +80,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
     /**
@@ -102,7 +107,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
     /**
@@ -128,7 +133,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
     /**
@@ -153,7 +158,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
     /**
@@ -178,7 +183,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
     /**
@@ -205,7 +210,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return INDEX_HTML;
     }
 
 }
