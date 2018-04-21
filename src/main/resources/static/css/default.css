@@ -6,7 +6,7 @@ ul {
 }
 
 .contentDiv {
-    padding: 20px 60px;
+    padding: 20px;
 }
 
 .table > thead > tr > td, .table > tbody > tr > td {
@@ -15,12 +15,6 @@ ul {
 
 .custom-a {
     margin: 5px;
-}
-
-#deleteBranchName {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    user-select: none;
 }
 
 .tooltip {
