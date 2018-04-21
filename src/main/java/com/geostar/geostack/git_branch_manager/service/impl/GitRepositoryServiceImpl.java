@@ -273,6 +273,18 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         return false;
     }
 
+    @Override
+    public List<String> getTagIntersect(List<GitProject> projects) {
+        List<String> list = new ArrayList<>();
+        if (projects.size() > 0) {
+            list = projects.get(0).getTagList();
+            for (GitProject gitProject : projects) {
+                list.retainAll(gitProject.getTagList());
+            }
+        }
+        return list;
+    }
+
     /**
      * 获取所有远程分支
      *
