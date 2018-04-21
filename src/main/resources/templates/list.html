@@ -35,8 +35,10 @@
     </table>
     <div>
         <button class="btn btn-primary custom-a" onclick="pullAll();">拉取代码</button>
-        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#createBranchModal">创建分支</button>
-        <div class="btn-group">
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+                data-target="#createBranchModal">创建分支
+        </button>
+        <div th:if="${!#lists.isEmpty(branchIntersect)}" class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">切换分支
                 <span class="caret"></span>
             </button>
@@ -47,13 +49,20 @@
                         onclick="checkoutAll(this)"></a></li>
             </ul>
         </div>
-        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#createTagModal">创建标签</button>
-        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#pushModal">推送代码</button>
-        <button class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
-                th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}">
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+                data-target="#createTagModal">创建标签
+        </button>
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+                data-target="#pushModal">推送代码
+        </button>
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}"
+                class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
+        >
             删除当前分支
         </button>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-danger custom-a" data-toggle="modal" data-target="#deleteTagModal">删除标签</button>
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-danger custom-a" data-toggle="modal"
+                data-target="#deleteTagModal">删除标签
+        </button>
     </div>
     <hr/>
     <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
