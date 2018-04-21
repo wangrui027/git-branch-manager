@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -52,9 +53,7 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return "list";
     }
 
@@ -77,9 +76,7 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
     }
 
@@ -104,9 +101,7 @@ public class IndexController {
             }
             gitProject.getBranchList().add(branchName);
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
     }
 
@@ -130,9 +125,7 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
     }
 
@@ -155,9 +148,7 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
     }
 
@@ -180,9 +171,7 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
     }
 
@@ -207,10 +196,33 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
-        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
-        model.addAttribute("projects", projects);
-        model.addAttribute("branchIntersect", branchIntersect);
+        modelBuild(model, projects);
         return INDEX_HTML;
+    }
+
+
+    /**
+     * 构建model属性
+     * @param model
+     * @param projects
+     * @param objects
+     */
+    private void modelBuild(Model model, List<GitProject> projects, Object... objects) {
+        /**
+         * 添加项目集合属性
+         */
+        model.addAttribute("projects", projects);
+        /**
+         * 添加分支属性
+         */
+        List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
+        model.addAttribute("branchIntersect", branchIntersect);
+        /**
+         * 添加标签属性
+         */
+        List<String> tagIntersect = gitRepositoryService.getTagIntersect(projects);
+        model.addAttribute("tagIntersect", tagIntersect);
+        model.addAllAttributes(Arrays.asList(objects));
     }
 
 }
