@@ -53,7 +53,7 @@
         <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#createTagModal">创建标签
         </button>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master'}" class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#pushModal">推送代码
         </button>
         <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}"
