@@ -34,15 +34,14 @@
         </tbody>
     </table>
     <div>
-        <button class="btn btn-primary custom-a" onclick="pullAll();">拉取代码</button>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal"
-                data-target="#createBranchModal">创建分支
+        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip" title="拉取当前分支最新源代码">拉取代码</button>
+        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-primary custom-a" data-toggle="modal" data-target="#createBranchModal">创建分支
         </button>
         <div th:if="${!#lists.isEmpty(branchIntersect)}" class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">切换分支
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu" role="menu" style="max-height: 168px;overflow: auto;">
                 <li th:each="branch : ${branchIntersect}"><a
                         th:if="${!#lists.isEmpty(projects) and projects[0].currBranch != branch}" th:text="${branch}"
                         href="javascript:void(0);"
@@ -60,7 +59,7 @@
         >
             删除当前分支
         </button>
-        <button th:if="${!#lists.isEmpty(branchIntersect)}" class="btn btn-danger custom-a" data-toggle="modal"
+        <button th:if="${!#lists.isEmpty(tagIntersect)}" class="btn btn-danger custom-a" data-toggle="modal"
                 data-target="#deleteTagModal">删除标签
         </button>
     </div>
@@ -70,6 +69,8 @@
 </div>
 <script>
     var $ = window.jQuery;
+
+    $("[data-toggle='tooltip']").tooltip();
 
     /**
      * 拉取代码
@@ -161,7 +162,13 @@
                     标签删除操作后需要点击【推送代码】按钮，远程仓库才会删除。点击【确定】按钮后，如果需要撤销，请点击拉取【拉取代码】按钮撤销删除。
                 </p>
                 <p>
-                    请选择要删除的标签
+                    待删除的标签：
+                </p>
+                <p>
+                    <select class="form-control" id="selectTagName">
+                        <option value=""> - 请选择 -</option>
+                        <option th:each="tag : ${tagIntersect}" th:value="${tag}" th:text="${tag}"></option>
+                    </select>
                 </p>
             </div>
             <div class="modal-footer">
@@ -365,7 +372,9 @@
                 </h4>
             </div>
             <div class="modal-body">
-                分支名称：<input id="newBranchName"/>
+                <p>
+                    分支名称：<input id="newBranchName"/>
+                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
