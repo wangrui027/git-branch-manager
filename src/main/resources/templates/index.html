@@ -50,7 +50,7 @@
         <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#createTagModal">创建标签</button>
         <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#pushModal">推送代码</button>
         <button class="btn btn-danger custom-a" onclick="openDeleteBranchModal();"
-                th:if="${(! #lists.isEmpty(projects)) and projects[0].currBranch != 'master' and projects[0].currBranch != 'develop'}">
+                th:if="${!#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}">
             删除当前分支
         </button>
     </div>
