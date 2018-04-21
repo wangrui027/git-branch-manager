@@ -22,11 +22,21 @@ public class IndexController {
     /**
      * 首页展示
      *
-     * @param model
      * @return
      */
     @RequestMapping("/")
-    public String index(Model model) {
+    public String index() {
+        return "index";
+    }
+
+    /**
+     * 列表展示
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/list")
+    public String list(Model model) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -40,7 +50,7 @@ public class IndexController {
         List<String> branchIntersect = gitRepositoryService.getBranchIntersect(projects);
         model.addAttribute("projects", projects);
         model.addAttribute("branchIntersect", branchIntersect);
-        return "index";
+        return "list";
     }
 
     /**
