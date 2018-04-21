@@ -79,13 +79,14 @@
         >
             删除当前分支
         </button>
-        <button th:if="${!#lists.isEmpty(tagIntersect)}" class="btn btn-danger custom-a" data-toggle="modal"
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch eq 'master'}"
+                class="btn btn-danger custom-a" data-toggle="modal"
                 data-target="#deleteTagModal">删除标签
         </button>
     </div>
     <hr/>
     <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
-                                        data-target="#featuresLegendModal">功能说明</a></strong>
+                                        data-target="#featuresLegendModal">使用指南</a></strong>
 </div>
 <input id="global-copy-textarea"/>
 <script>
@@ -417,7 +418,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title">
-                    功能说明
+                    使用指南
                 </h4>
             </div>
             <div class="modal-body">
