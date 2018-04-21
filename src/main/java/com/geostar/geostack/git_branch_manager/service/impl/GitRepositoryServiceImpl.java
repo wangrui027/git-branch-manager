@@ -95,6 +95,12 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean updateGitProjectInfo(GitProject gitProject) throws IOException, GitAPIException {
+        gitProject.setCurrBranch(null);
+        gitProject.setLastCommitId(null);
+        gitProject.setLastCommitUser(null);
+        gitProject.setLastCommitDate(null);
+        gitProject.getBranchList().clear();
+        gitProject.getTagList().clear();
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
@@ -115,13 +121,16 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
              * 获取所有远程分支
              */
             getAllRemoteBranch(gitProject);
+            /**
+             * 获取标签信息
+             */
+            List<Ref> tagRefs = git.tagList().call();
+            for (Ref tagRef : tagRefs) {
+                String tagName = tagRef.getName();
+                tagName = tagName.substring("refs/tags/".length(), tagName.length());
+                gitProject.getTagList().add(tagName);
+            }
             git.close();
-        } else {
-            gitProject.setCurrBranch(null);
-            gitProject.setLastCommitId(null);
-            gitProject.setLastCommitUser(null);
-            gitProject.setLastCommitDate(null);
-            gitProject.getBranchList().clear();
         }
         return true;
     }
