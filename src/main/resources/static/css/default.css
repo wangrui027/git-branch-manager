@@ -9,7 +9,7 @@ ul {
     padding: 20px 60px;
 }
 
-.table>thead>tr>td, .table>tbody>tr>td {
+.table > thead > tr > td, .table > tbody > tr > td {
     vertical-align: middle;
 }
 
@@ -25,4 +25,12 @@ ul {
 
 .tooltip {
     font-size: 14px;
+}
+
+#global-copy-textarea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: -10;
 }

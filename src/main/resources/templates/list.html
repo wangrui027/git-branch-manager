@@ -22,6 +22,7 @@
         <th>最后提交id</th>
         <th>最后提交人</th>
         <th>最后提交时间</th>
+        <th>操作</th>
         </thead>
         <tbody>
         <tr th:each="project : ${projects}">
@@ -30,6 +31,7 @@
             <td th:text="${project.lastCommitId}"></td>
             <td th:text="${project.lastCommitUser}"></td>
             <td th:text="${#dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></td>
+            <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);" onclick="copyPath(this)">复制地址</a></td>
         </tr>
         </tbody>
     </table>
@@ -67,10 +69,20 @@
     <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
                                         data-target="#featuresLegendModal">功能说明</a></strong>
 </div>
+<input id="global-copy-textarea"/>
 <script>
     var $ = window.jQuery;
 
+    var globalCopyTextarea = document.getElementById("global-copy-textarea");
+
     $("[data-toggle='tooltip']").tooltip();
+
+    function copyPath(obj){
+        var path = $(obj).attr("path");
+        globalCopyTextarea.value = path;
+        globalCopyTextarea.select();
+        document.execCommand("copy");
+    }
 
     /**
      * 拉取代码
