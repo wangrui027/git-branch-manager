@@ -235,13 +235,13 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         /**
          * 如果是本地分支或者有修改则提交代码
          */
-        if (getBranchType(git, gitProject.getCurrBranch()) == BranchTypeEnum.LOCAL || status.hasUncommittedChanges()) {
+        if(status.hasUncommittedChanges()){
             git.add().addFilepattern(".").call();
             git.commit().setAll(true).setMessage(message).call();
-            git.push().setPushAll().setCredentialsProvider(allowHosts).call();
         }
+        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
         git.close();
-        return false;
+        return true;
     }
 
     @Override
