@@ -6,7 +6,9 @@ import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -108,10 +110,14 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             /**
              * 获取最后提交信息
              */
-            RevCommit commit = git.log().call().iterator().next();
-            gitProject.setLastCommitId(commit.getId().getName());
-            gitProject.setLastCommitUser(commit.getAuthorIdent().getEmailAddress());
-            gitProject.setLastCommitDate(new Date(new Long(commit.getCommitTime()) * 1000));
+            try {
+                RevCommit commit = git.log().call().iterator().next();
+                gitProject.setLastCommitId(commit.getId().getName());
+                gitProject.setLastCommitUser(commit.getAuthorIdent().getEmailAddress());
+                gitProject.setLastCommitDate(new Date(new Long(commit.getCommitTime()) * 1000));
+            } catch (NoHeadException e) {
+                logger.warn("当前仓库没有任何提交信息，仓库地址：" + gitProject.getRemoteUrl());
+            }
             /**
              * 获取分支信息
              */
@@ -221,9 +227,12 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
-        git.add().addFilepattern(".").call();
-        git.commit().setAll(true).setMessage(message).call();
-        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
+        Status status = git.status().call();
+        if (status.hasUncommittedChanges()) {
+            git.add().addFilepattern(".").call();
+            git.commit().setAll(true).setMessage(message).call();
+            git.push().setPushAll().setCredentialsProvider(allowHosts).call();
+        }
         git.close();
         return false;
     }
