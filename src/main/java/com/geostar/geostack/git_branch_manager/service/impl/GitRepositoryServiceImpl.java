@@ -223,7 +223,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         Git git = Git.open(file);
         git.add().addFilepattern(".").call();
         git.commit().setAll(true).setMessage(message).call();
-        git.push().setPushTags().setCredentialsProvider(allowHosts).call();
+        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
         git.close();
         return false;
     }
