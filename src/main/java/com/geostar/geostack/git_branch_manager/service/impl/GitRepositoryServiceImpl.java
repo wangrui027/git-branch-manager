@@ -285,6 +285,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.tag().setName(tagName).setMessage(tagLog).call();
+        git.push().setPushTags().call();
         git.close();
         return false;
     }
