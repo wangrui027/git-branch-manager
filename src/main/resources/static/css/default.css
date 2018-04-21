@@ -22,3 +22,7 @@ ul {
     -khtml-user-select: none;
     user-select: none;
 }
+
+.tooltip {
+    font-size: 14px;
+}
