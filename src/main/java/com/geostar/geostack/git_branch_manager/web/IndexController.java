@@ -205,7 +205,7 @@ public class IndexController {
      * @param projectName
      * @return
      */
-    @RequestMapping({"/fileDetails/{name}"})
+    @RequestMapping({"/fileListDetails/{name}"})
     public String fileDetails(Model model, @PathVariable(value = "name") String projectName) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
@@ -220,7 +220,7 @@ public class IndexController {
                 model.addAttribute("project", gitProject);
             }
         }
-        return "fileDetails";
+        return "fileListDetails";
     }
 
     /**

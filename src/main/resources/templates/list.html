@@ -48,7 +48,7 @@
                 <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
                 <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
                 <span>[<a data-toggle="tooltip" title="查看文件状态详情" th:attr="name=${project.name}"
-                          href="javascript:void(0);" onclick="showFileDetails(this)">详情</a>]</span>
+                          href="javascript:void(0);" onclick="showFileListDetails(this)">详情</a>]</span>
             </td>
             <td th:text="${project.lastCommitId}"></td>
             <td th:text="${project.lastCommitMessage}"></td>
@@ -186,15 +186,15 @@
      * 显示项目文件详情
      * @param obj
      */
-    function showFileDetails(obj) {
+    function showFileListDetails(obj) {
         var path = $(obj).attr("name");
-        $("#fileDetailsIframe").attr("src", "/fileDetails/" + path);
-        $('#fileDetailsModal').modal('show');
+        $("#fileListDetailsIframe").attr("src", "/fileListDetails/" + path);
+        $('#fileListDetailsModal').modal('show');
     }
 
 </script>
 <!-- 文件状态模态框（Modal） -->
-<div class="modal fade" id="fileDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="fileListDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -206,7 +206,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <iframe id="fileDetailsIframe" style="border: none;overflow: hidden;"></iframe>
+                <iframe id="fileListDetailsIframe" style="border: none;overflow: hidden;"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">
