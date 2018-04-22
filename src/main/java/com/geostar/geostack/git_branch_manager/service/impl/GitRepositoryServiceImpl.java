@@ -105,6 +105,9 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         gitProject.setLastCommitDate(null);
         gitProject.getBranchList().clear();
         gitProject.getTagList().clear();
+        gitProject.getUntrackedSet().clear();
+        gitProject.getModifiedSet().clear();
+        gitProject.getMissingSet().clear();
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
@@ -123,7 +126,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 logger.warn("当前仓库没有任何提交信息，仓库地址：" + gitProject.getRemoteUrl());
             }
             /**
-             * 获取分支信息
+             * 获取当前多分支
              */
             gitProject.setCurrBranch(git.getRepository().getBranch());
 
@@ -140,6 +143,13 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 tagName = tagName.substring("refs/tags/".length(), tagName.length());
                 gitProject.getTagList().add(tagName);
             }
+            /**
+             * 获取工作区文件状态
+             */
+            Status status = git.status().call();
+            gitProject.getUntrackedSet().addAll(status.getUntracked());
+            gitProject.getModifiedSet().addAll(status.getModified());
+            gitProject.getMissingSet().addAll(status.getMissing());
             git.close();
         }
         return true;
