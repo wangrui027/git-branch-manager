@@ -2,7 +2,9 @@ package com.geostar.geostack.git_branch_manager.pojo;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GitProject {
 
@@ -55,6 +57,21 @@ public class GitProject {
      * 标签集合
      */
     private final List<String> tagList = new ArrayList<>();
+
+    /**
+     * 仓库文件新增集合
+     */
+    private final Set<String> untrackedSet = new HashSet<>();
+
+    /**
+     * 仓库文件修改集合
+     */
+    private final Set<String> modifiedSet = new HashSet<>();
+
+    /**
+     * 仓库文件删除集合
+     */
+    private final Set<String> missingSet = new HashSet<>();
 
     public String getName() {
         return name;
@@ -126,6 +143,18 @@ public class GitProject {
 
     public List<String> getTagList() {
         return tagList;
+    }
+
+    public Set<String> getUntrackedSet(){
+        return untrackedSet;
+    }
+
+    public Set<String> getModifiedSet(){
+        return modifiedSet;
+    }
+
+    public Set<String> getMissingSet(){
+        return missingSet;
     }
 
 }
