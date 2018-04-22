@@ -103,7 +103,6 @@
 </div>
 <input id="global-copy-textarea"/>
 <script>
-    var $ = window.jQuery;
 
     var globalCopyTextarea = document.getElementById("global-copy-textarea");
 
@@ -188,8 +187,11 @@
      */
     function showFileListDetails(obj) {
         var path = $(obj).attr("name");
-        $("#fileListDetailsIframe").attr("src", "/fileListDetails/" + path);
-        $('#fileListDetailsModal').modal('show');
+        $.get("/fileListDetails/" + path, function (result) {
+            $("#fileListDetailsBody").html(result);
+            $("[data-toggle='tooltip']").tooltip();
+            $('#fileListDetailsModal').modal('show');
+        });
     }
 
 </script>
@@ -205,8 +207,7 @@
                     文件状态详情
                 </h4>
             </div>
-            <div class="modal-body">
-                <iframe id="fileListDetailsIframe" style="border: none;overflow: hidden;"></iframe>
+            <div id="fileListDetailsBody" class="modal-body">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">

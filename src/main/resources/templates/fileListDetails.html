@@ -1,37 +1,29 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <link th:href="@{/bootstrap-3.3.7/css/bootstrap.css}" rel="stylesheet"/>
-    <link th:href="@{/css/default.css}" rel="stylesheet"/>
-    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/bootstrap-3.3.7/js/bootstrap.js}"></script>
-    <title th:if="${project != null}" th:text="${project.name+' - 仓库文件详情'}"></title>
-</head>
-<body>
-<div>
+<div xmlns:th="http://www.thymeleaf.org">
     <div th:if="${#sets.isEmpty(project.untrackedSet) and #sets.isEmpty(project.modifiedSet) and #sets.isEmpty(project.missingSet)}">
         暂无文件新增、修改、删除。
     </div>
     <div th:if="${!#sets.isEmpty(project.untrackedSet)}">
         <strong>新增文件：</strong>
         <ul>
-            <li th:each="file : ${project.untrackedSet}" th:text="${file}"></li>
+            <li th:each="file : ${project.untrackedSet}">
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件内容" th:href="${'/untrackedFileDetail/' + project.name + '/' + file}"></a>
+            </li>
         </ul>
     </div>
     <div th:if="${!#sets.isEmpty(project.modifiedSet)}">
         <strong>修改文件：</strong>
         <ul>
-            <li th:each="file : ${project.modifiedSet}" th:text="${file}"></li>
+            <li th:each="file : ${project.modifiedSet}">
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件修改" th:href="${'/modifiedFileDetail/' + project.name + '/' + file}"></a>
+            </li>
         </ul>
     </div>
     <div th:if="${!#sets.isEmpty(project.missingSet)}">
         <strong>删除文件：</strong>
         <ul>
-            <li th:each="file : ${project.missingSet}" th:text="${file}"></li>
+            <li th:each="file : ${project.missingSet}">
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示删除文件内容" th:href="${'/missingFileDetail/' + project.name + '/' + file}"></a>
+            </li>
         </ul>
     </div>
 </div>
-</body>
-</html>
