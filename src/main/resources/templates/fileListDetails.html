@@ -6,7 +6,7 @@
         <strong>新增文件：</strong>
         <ul>
             <li th:each="file : ${project.untrackedSet}">
-                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件内容" th:href="${'/untrackedFileDetail/' + project.name + '/' + file}"></a>
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件内容" th:href="${'/untrackedFileView/' + project.name + '/' + file}"></a>
             </li>
         </ul>
     </div>
@@ -14,7 +14,7 @@
         <strong>修改文件：</strong>
         <ul>
             <li th:each="file : ${project.modifiedSet}">
-                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件修改" th:href="${'/modifiedFileDetail/' + project.name + '/' + file}"></a>
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示文件修改" th:href="${'/modifiedFileView/' + project.name + '/' + file}"></a>
             </li>
         </ul>
     </div>
@@ -22,7 +22,7 @@
         <strong>删除文件：</strong>
         <ul>
             <li th:each="file : ${project.missingSet}">
-                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示删除文件内容" th:href="${'/missingFileDetail/' + project.name + '/' + file}"></a>
+                <a target="_blank" th:text="${file}" data-toggle="tooltip" title="显示删除文件内容" th:href="${'/missingFileView/' + project.name + '/' + file}"></a>
             </li>
         </ul>
     </div>
