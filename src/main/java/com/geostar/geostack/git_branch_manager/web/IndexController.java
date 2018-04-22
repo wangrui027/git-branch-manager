@@ -200,9 +200,32 @@ public class IndexController {
         return INDEX_HTML;
     }
 
+    /**
+     * @param model
+     * @param projectName
+     * @return
+     */
+    @RequestMapping({"/fileDetails/{name}"})
+    public String fileDetails(Model model, @PathVariable(value = "name") String projectName) {
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            if (projectName.equals(gitProject.getName())) {
+                try {
+                    gitRepositoryService.updateGitProjectInfo(gitProject);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GitAPIException e) {
+                    e.printStackTrace();
+                }
+                model.addAttribute("project", gitProject);
+            }
+        }
+        return "fileDetails";
+    }
 
     /**
      * 构建model属性
+     *
      * @param model
      * @param projects
      * @param objects
