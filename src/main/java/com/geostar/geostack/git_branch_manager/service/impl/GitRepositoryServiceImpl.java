@@ -4,6 +4,7 @@ import com.geostar.geostack.git_branch_manager.common.BranchTypeEnum;
 import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.Status;
@@ -245,7 +246,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         /**
          * 如果是本地分支或者有修改则提交代码
          */
-        if(status.hasUncommittedChanges()){
+        if (status.hasUncommittedChanges()) {
             git.add().addFilepattern(".").call();
             git.commit().setAll(true).setMessage(message).call();
         }
@@ -310,6 +311,14 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             }
         }
         return list;
+    }
+
+    @Override
+    public String getFileContent(GitProject gitProject, String fileName) throws IOException {
+        String workHome = gitRepositoryConfig.getWorkHome();
+        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + fileName);
+        String content = FileUtils.readFileToString(file, "UTF-8");
+        return content;
     }
 
     /**

@@ -79,4 +79,12 @@ public interface IGitRepositoryService {
      * @return
      */
     List<String> getTagIntersect(List<GitProject> projects);
+
+    /**
+     * 获取文件内容
+     * @param gitProject
+     * @param fileName
+     * @return
+     */
+    String getFileContent(GitProject gitProject, String fileName) throws IOException;
 }

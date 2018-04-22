@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta charset="UTF-8"/>
+    <link th:href="@{/bootstrap-3.3.7/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/highlight.js-9.12.0/styles/github.css}" rel="stylesheet"/>
+    <!--<link th:href="@{https://cdn.bootcss.com/highlight.js/9.12.0/styles/github.min.css}" rel="stylesheet"/>-->
+    <link th:href="@{/css/default.css}" rel="stylesheet"/>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/bootstrap-3.3.7/js/bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js}"></script>
+    <!--<script type="text/javascript" th:src="@{/highlight.js-9.12.0/highlight.js}"></script>-->
+    <script>
+        $(document).ready(function () {
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            //代码高亮自定义
+            $("code").each(function () {
+                $(this).html("<ul><li>" + $(this).html().replace(/\n/g, "\n</li><li>") + "\n</li></ul>");
+            });
+
+        });
+    </script>
+    <title>新增文件预览</title>
+    <style>
+        .hljs {
+            border: 0;
+            font-size: 12px;
+            background: #eee !important;
+            display: block;
+            padding: 1px;
+            margin: 0;
+            width: 100%;
+            font-weight: 200;
+            color: #333;
+            white-space: pre-wrap
+        }
+
+        .hljs ul {
+            list-style: decimal;
+            background-color: #fff;
+            margin: 0px 0px 0 40px !important;
+            padding: 0px;
+        }
+
+        .hljs ul li {
+            list-style: decimal-leading-zero;
+            border-left: 1px solid #ddd !important;
+            background: #fff;
+            padding: 5px !important;
+            margin: 0 !important;
+            line-height: 14px;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
+        .hljs ul li:nth-of-type(even) {
+            background-color: #f3f3f3;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
-$END$
+<div class="contentDiv">
+    <div th:if="${exception}" th:text="${exceptionMessage}"></div>
+    <pre th:if="${!exception}"><code class="java" th:text="${fileContent}"></code></pre>
+</div>
+
 </body>
 </html>

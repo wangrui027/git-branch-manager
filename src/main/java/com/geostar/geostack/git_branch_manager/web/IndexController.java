@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +24,10 @@ public class IndexController {
      * 首页对应的模板名称
      */
     private static final String INDEX_HTML = "list";
+    /**
+     * 未提交文件view的URI路径前缀
+     */
+    private static final String UNTRACKED_FILE_VIEW_PATH_PREFIX = "/untrackedFileView/";
     @Resource
     private IGitRepositoryService gitRepositoryService;
 
@@ -221,6 +228,38 @@ public class IndexController {
             }
         }
         return "fileListDetails";
+    }
+
+    /**
+     * 新增文件预览
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping({UNTRACKED_FILE_VIEW_PATH_PREFIX + "{projectName}/**"})
+    public String untrackedFileView(Model model, @PathVariable(value = "projectName") String projectName, HttpServletRequest request) {
+        String path = request.getRequestURI().substring(UNTRACKED_FILE_VIEW_PATH_PREFIX.length(), request.getRequestURI().length());
+        model.addAttribute("exception", false);
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            if (projectName.equals(gitProject.getName())) {
+                try {
+                    String fileName = URLDecoder.decode(path.substring(projectName.length()+1, path.length()), "UTF-8");
+                    String fileContent = gitRepositoryService.getFileContent(gitProject, fileName);
+                    if (fileName.contains(File.separator)) {
+                        fileName = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
+                    }
+                    model.addAttribute("fileContent", fileContent);
+                    model.addAttribute("fileName", fileName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    model.addAttribute("exception", true);
+                    model.addAttribute("exceptionMessage", e.getMessage());
+                }
+
+            }
+        }
+        return "untrackedFileView";
     }
 
     /**
