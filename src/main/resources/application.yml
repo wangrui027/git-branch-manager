@@ -1,5 +1,7 @@
 server:
   port: 8090
+logging:
+  file: D:\git-repository\log.log
 work-home: D:\git-repository
 projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/GeoCloudActiveMQClient.git
