@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -29,12 +30,20 @@ public class GitRepositoryConfig {
 
     public void setProjects(List<String> projects) {
         gitProjects.clear();
-        for (String remoteUrl : projects) {
-            GitProject gitProject = new GitProject();
-            String projectName = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length() - ".git".length());
-            gitProject.setName(projectName);
-            gitProject.setRemoteUrl(remoteUrl);
-            gitProjects.add(gitProject);
+        String[] remoteUrls = new String[projects.size()];
+        projects.toArray(remoteUrls);
+        Arrays.sort(remoteUrls);
+        for (String url : remoteUrls) {
+            for (String remoteUrl : projects) {
+                if(url.equals(remoteUrl)){
+                    GitProject gitProject = new GitProject();
+                    String projectName = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length() - ".git".length());
+                    gitProject.setName(projectName);
+                    gitProject.setRemoteUrl(remoteUrl);
+                    gitProjects.add(gitProject);
+                    break;
+                }
+            }
         }
     }
 
