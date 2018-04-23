@@ -7,11 +7,14 @@ import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
@@ -94,9 +97,9 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         } else {
             Git git = Git.open(file);
             BranchTypeEnum branchType = getBranchType(git, gitProject.getCurrBranch());
-            if(BranchTypeEnum.LOCAL == branchType){
+            if (BranchTypeEnum.LOCAL == branchType) {
                 logger.info("本地分支不做拉取：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
-            }else{
+            } else {
                 logger.info("拉取仓库开始：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
                 git.pull().setCredentialsProvider(allowHosts).call();
                 logger.info("拉取仓库完毕：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
@@ -349,6 +352,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     /**
      * 删除标签，先删除本地标签，再删除远程标签
+     *
      * @param gitProject
      * @param tagName
      * @return
@@ -376,6 +380,40 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         }
         git.close();
         logger.info("删除标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagName);
+        logger.info(LOG_SEPARATOR);
+        return true;
+    }
+
+    /**
+     * 合并分支，将被合并分支的修改并入当前工作分支，不使用快进模式
+     * @param gitProject
+     * @param currWorkBranch 当前工作分支
+     * @param sourceBranch   被合并的分支
+     * @param message
+     * @return
+     * @throws IOException
+     * @throws GitAPIException
+     */
+    @Override
+    public boolean mergeBranch(GitProject gitProject, String currWorkBranch, String sourceBranch, String message) throws IOException, GitAPIException {
+        logger.info("合并分支开始：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
+        String workHome = gitRepositoryConfig.getWorkHome();
+        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        Git git = Git.open(file);
+        Repository repo = git.getRepository();
+        if (!repo.getBranch().equals(currWorkBranch)) {
+            git.checkout().setName(currWorkBranch).call();
+        }
+        ObjectId mergeBase = repo.resolve(sourceBranch);
+        git.merge().
+                include(mergeBase).
+                setCommit(true).
+                setFastForward(MergeCommand.FastForwardMode.NO_FF).
+                setMessage(message).
+                call();
+        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
+        git.close();
+        logger.info("合并分支完成：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
         logger.info(LOG_SEPARATOR);
         return true;
     }

@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
@@ -285,6 +286,38 @@ public class IndexController {
         for (GitProject gitProject : projects) {
             try {
                 gitRepositoryService.deleteTag(gitProject, tagName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }
+        }
+        modelBuild(model, projects);
+        return INDEX_HTML;
+    }
+
+    /**
+     * 合并分支，将被合并分支的修改并入当前工作分支
+     *
+     * @param model
+     * @param currWorkBranch 当前工作分支
+     * @param sourceBranch   被合并分支
+     * @return
+     */
+    @RequestMapping({"/mergeBranch/{currWorkBranch}/{sourceBranch}/**"})
+    public String mergeBranch(Model model, @PathVariable(value = "currWorkBranch") String currWorkBranch,
+                              @PathVariable(value = "sourceBranch") String sourceBranch,
+                              HttpServletRequest request) {
+        String message = null;
+        try {
+            message = URLDecoder.decode(request.getRequestURI().substring(("/mergeBranch/"+currWorkBranch+"/"+sourceBranch+"/").length(), request.getRequestURI().length()), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            try {
+                gitRepositoryService.mergeBranch(gitProject, currWorkBranch, sourceBranch, message);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (GitAPIException e) {

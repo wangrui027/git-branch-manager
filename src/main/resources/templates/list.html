@@ -77,11 +77,14 @@
             <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}"
                                             th:href="${project.gitLabUrl}"></a></td>
             <td>
-                <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
-                <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
-                <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
-                <span>[<a data-toggle="tooltip" title="查看文件状态详情" th:attr="name=${project.name}"
-                          href="javascript:void(0);" onclick="showFileListDetails(this)">详情</a>]</span>
+                <span>
+                    <a data-toggle="tooltip" title="查看文件状态详情" th:attr="name=${project.name}"
+                       href="javascript:void(0);" onclick="showFileListDetails(this)">
+                        <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
+                        <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
+                        <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
+                    </a>
+                </span>
             </td>
             <td>
                 <span th:if="${project.lastCommitUser != null}"
@@ -196,6 +199,16 @@
         window.location.href = "/deleteTag/" + tagName;
     }
 
+    /**
+     * 合并分支
+     */
+    function mergeBranch() {
+        var currentBranch = $("#mergeCurrentBranch").text().trim();
+        var selectBranch = $("#selectBranch").val();
+        var message = $("#mergeBranchMessage").val();
+        window.location.href = "/mergeBranch/" + currentBranch + "/" + selectBranch + "/" + encodeURIComponent(message);
+    }
+
 </script>
 <!-- 合并分支模态框（Modal） -->
 <div class="modal fade" id="mergeBranchModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -214,31 +227,33 @@
                     合并前请拉取最新代码并提交本地所有修改，除了<strong>&nbsp;develop&nbsp;</strong>分支，默认合并分支后会删除本地及服务器上被合并的分支，请谨慎操作。
                 </p>
                 <p>
-                    当前工作分支：<strong th:text="${'&nbsp;' + projects[0].currBranch + '&nbsp;'}"></strong>
+                    当前工作分支：<strong id="mergeCurrentBranch"
+                                   th:text="${'&nbsp;' + projects[0].currBranch + '&nbsp;'}"></strong>
                 </p>
                 <p>
-                    待合并的分支：
-                </p>
-                <p>
+
                     <!--
                      合并分支时分支下拉框的控制规则：
                      1、当前工作分支不能和当前工作分支合并，这没有意义
                      2、当前工作分支为develop时，master分支不允许被其合并
                      3、当前工作分支不为master和develop时master分支和develop分支不允许被其合并
                      -->
-                    <select class="form-control" id="selectBranchName">
-                        <option value=""> - 请选择 -</option>
-                        <option th:each="branch : ${branchIntersect}" th:value="${branch}" th:text="${branch}"
-                                th:if="${branch != projects[0].currBranch and !(projects[0].currBranch == 'develop' && branch == 'master')
+                    待合并的分支：<select class="form-control" id="selectBranch" style="width:auto;display: inline;">
+                    <option value=""> - 请选择 -</option>
+                    <option th:each="branch : ${branchIntersect}" th:value="${branch}" th:text="${branch}"
+                            th:if="${branch != projects[0].currBranch and !(projects[0].currBranch == 'develop' && branch == 'master')
                                 and !(projects[0].currBranch != 'master' && projects[0].currBranch != 'develop' && (branch == 'master' || branch == 'develop'))}"></option>
-                    </select>
+                </select>
+                </p>
+                <p>
+                    合并日志：<textarea id="mergeBranchMessage" class="form-control"></textarea>
                 </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     取消
                 </button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteTag();">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="mergeBranch();">
                     确定
                 </button>
             </div>
@@ -350,10 +365,10 @@
                     工作分支：<label th:if="${! #lists.isEmpty(projects)}" th:text="${projects[0].currBranch}"></label>
                 </p>
                 <p>
-                    标签名称：<input id="inputTagName"/>
+                    标签名称：<input id="inputTagName" class="form-control" style="width:auto;display: inline;"/>
                 </p>
                 <p>
-                    提交日志：<input id="inputTagLog"/>
+                    提交日志：<input id="inputTagLog" class="form-control" style="width:auto;display: inline;"/>
                 </p>
             </div>
             <div class="modal-footer">
@@ -411,7 +426,7 @@
                                 th:text="${projects[0].currBranch}"></label>
                 </p>
                 <p>
-                    提交日志：<input id="inputPushLog"/>
+                    提交日志：<input id="inputPushLog" class="form-control" style="width:auto;display: inline;"/>
                 </p>
             </div>
             <div class="modal-footer">
@@ -464,7 +479,8 @@
                     删除本地分支的同时会删除远程仓库的对应分支，是否确定删除分支：<label id="currBranch" th:text="${projects[0].currBranch}"></label>
                 </p>
                 <p>
-                    <label>请输入分支名称：<input id="inputDeleteBranchName"/></label>
+                    <label>请输入分支名称：<input id="inputDeleteBranchName" class="form-control"
+                                          style="width:auto;display: inline;"/></label>
                 </p>
             </div>
             <div class="modal-footer">
@@ -492,7 +508,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    分支名称：<input id="newBranchName"/>
+                    分支名称：<input id="newBranchName" class="form-control" style="width:auto;display: inline;"/>
                 </p>
             </div>
             <div class="modal-footer">
