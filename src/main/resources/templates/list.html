@@ -47,6 +47,9 @@
                 class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#pushModal">推送代码
         </button>
+        <button class="btn btn-primary custom-a" data-toggle="modal" data-target="#mergeBranchModal">
+            合并分支
+        </button>
         <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch ne 'master' and projects[0].currBranch ne 'develop'}"
                 class="btn btn-danger custom-a" data-toggle="modal" data-target="#deleteBranchModal"
         >
@@ -194,6 +197,54 @@
     }
 
 </script>
+<!-- 合并分支模态框（Modal） -->
+<div class="modal fade" id="mergeBranchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    合并分支
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    合并前请拉取最新代码并提交本地所有修改，除了<strong>&nbsp;develop&nbsp;</strong>分支，默认合并分支后会删除本地及服务器上被合并的分支，请谨慎操作。
+                </p>
+                <p>
+                    当前工作分支：<strong th:text="${'&nbsp;' + projects[0].currBranch + '&nbsp;'}"></strong>
+                </p>
+                <p>
+                    待合并的分支：
+                </p>
+                <p>
+                    <!--
+                     合并分支时分支下拉框的控制规则：
+                     1、当前工作分支不能和当前工作分支合并，这没有意义
+                     2、当前工作分支为develop时，master分支不允许被其合并
+                     3、当前工作分支不为master和develop时master分支和develop分支不允许被其合并
+                     -->
+                    <select class="form-control" id="selectBranchName">
+                        <option value=""> - 请选择 -</option>
+                        <option th:each="branch : ${branchIntersect}" th:value="${branch}" th:text="${branch}"
+                                th:if="${branch != projects[0].currBranch and !(projects[0].currBranch == 'develop' && branch == 'master')
+                                and !(projects[0].currBranch != 'master' && projects[0].currBranch != 'develop' && (branch == 'master' || branch == 'develop'))}"></option>
+                    </select>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteTag();">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 文件状态模态框（Modal） -->
 <div class="modal fade" id="fileListDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
