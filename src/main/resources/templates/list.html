@@ -21,37 +21,6 @@
     </legend>
     <label style="font-size: 16px;">当前工作分支：<span th:if="${!#lists.isEmpty(projects)}"
                                                  th:text="${projects[0].currBranch}">master</span></label>
-    <table class="table table-hover table-bordered">
-        <thead>
-        <th>仓库名称</th>
-        <th>文件状态</th>
-        <th>最后提交id</th>
-        <th>提交日志</th>
-        <th>提交人</th>
-        <th>操作时间</th>
-        <th>操作</th>
-        </thead>
-        <tbody>
-        <tr th:each="project : ${projects}">
-            <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}" th:href="${project.gitLabUrl}"></a></td>
-            <td>
-                <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
-                <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
-                <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
-                <span>[<a data-toggle="tooltip" title="查看文件状态详情" th:attr="name=${project.name}"
-                          href="javascript:void(0);" onclick="showFileListDetails(this)">详情</a>]</span>
-            </td>
-            <td th:text="${project.lastCommitId}"></td>
-            <td th:text="${project.lastCommitMessage}"></td>
-            <td th:if="${project.lastCommitUser eq null}"></td>
-            <td th:if="${project.lastCommitUser ne null} "
-                th:text="${project.lastCommitUser + '（' + project.lastCommitEmail} + '）'"></td>
-            <td th:text="${#dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></td>
-            <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);"
-                   onclick="copyPath(this)">复制地址</a></td>
-        </tr>
-        </tbody>
-    </table>
     <div>
         <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="tooltip"
                 title="拉取当前分支最新源代码，第一次直接拉取master分支">拉取代码
@@ -88,6 +57,38 @@
                 data-target="#deleteTagModal">删除标签
         </button>
     </div>
+    <hr/>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <th>仓库名称</th>
+        <th>文件状态</th>
+        <th>最后提交id</th>
+        <th>提交日志</th>
+        <th>提交人</th>
+        <th>操作时间</th>
+        <th>操作</th>
+        </thead>
+        <tbody>
+        <tr th:each="project : ${projects}">
+            <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}" th:href="${project.gitLabUrl}"></a></td>
+            <td>
+                <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
+                <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
+                <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
+                <span>[<a data-toggle="tooltip" title="查看文件状态详情" th:attr="name=${project.name}"
+                          href="javascript:void(0);" onclick="showFileListDetails(this)">详情</a>]</span>
+            </td>
+            <td th:text="${project.lastCommitId}"></td>
+            <td th:text="${project.lastCommitMessage}"></td>
+            <td th:if="${project.lastCommitUser eq null}"></td>
+            <td th:if="${project.lastCommitUser ne null} "
+                th:text="${project.lastCommitUser + '（' + project.lastCommitEmail} + '）'"></td>
+            <td th:text="${#dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></td>
+            <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);"
+                   onclick="copyPath(this)">复制地址</a></td>
+        </tr>
+        </tbody>
+    </table>
     <hr/>
     <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
                                         data-target="#featuresLegendModal">使用指南</a></strong>
