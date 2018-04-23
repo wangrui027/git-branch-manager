@@ -175,8 +175,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         if (file.exists()) {
             logger.info("创建分支开始：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             Git git = Git.open(file);
-            git.branchCreate().setName(branchName).call();
-            git.checkout().setName(branchName).call();
+            git.checkout().setCreateBranch(true).setName(branchName).call();
             git.close();
             logger.info("创建分支完毕：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             logger.info(LOG_SEPARATOR);
