@@ -79,18 +79,20 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName());
         if (!file.exists()) {
-            logger.info("克隆仓库：{}", gitProject.getRemoteUrl());
+            logger.info("克隆仓库开始：{}", gitProject.getRemoteUrl());
             Git git = Git.cloneRepository()
                     .setURI(gitProject.getRemoteUrl())
                     .setDirectory(file)
                     .setCredentialsProvider(allowHosts)
                     .call();
             git.close();
+            logger.info("克隆仓库完毕：{}", gitProject.getRemoteUrl());
         } else {
             Git git = Git.open(file);
-            logger.info("拉取仓库：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
+            logger.info("拉取仓库开始：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
             git.pull().setCredentialsProvider(allowHosts).call();
             git.close();
+            logger.info("拉取仓库完毕：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
         }
         getAllRemoteBranch(gitProject);
         return true;
@@ -175,6 +177,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
+            logger.info("切换分支开始：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             Git git = Git.open(file);
             BranchTypeEnum branchType = getBranchType(git, branchName);
             if (BranchTypeEnum.REMOTE == branchType) {
@@ -182,6 +185,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             }
             git.checkout().setName(branchName).call();
             git.close();
+            logger.info("切换分支完毕：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             return true;
         }
         return false;
