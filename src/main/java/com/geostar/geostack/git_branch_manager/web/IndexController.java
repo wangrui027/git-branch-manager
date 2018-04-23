@@ -1,8 +1,10 @@
 package com.geostar.geostack.git_branch_manager.web;
 
+import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +32,8 @@ public class IndexController {
     private static final String UNTRACKED_FILE_VIEW_PATH_PREFIX = "/untrackedFileView/";
     @Resource
     private IGitRepositoryService gitRepositoryService;
+    @Autowired
+    private GitRepositoryConfig gitRepositoryConfig;
 
     /**
      * 首页展示
@@ -244,14 +248,17 @@ public class IndexController {
         String path = request.getRequestURI().substring(UNTRACKED_FILE_VIEW_PATH_PREFIX.length(), request.getRequestURI().length());
         model.addAttribute("exception", false);
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        String workHome = gitRepositoryConfig.getWorkHome();
         for (GitProject gitProject : projects) {
             if (projectName.equals(gitProject.getName())) {
                 try {
                     String fileName = URLDecoder.decode(path.substring(projectName.length() + 1, path.length()), "UTF-8");
+                    String filePath = workHome + File.separator + gitProject.getName() + File.separator + fileName;
                     String fileContent = gitRepositoryService.getFileContent(gitProject, fileName);
                     if (fileName.contains(File.separator)) {
                         fileName = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
                     }
+                    model.addAttribute("filePath", filePath);
                     model.addAttribute("fileContent", fileContent);
                     model.addAttribute("fileName", fileName);
                 } catch (IOException e) {

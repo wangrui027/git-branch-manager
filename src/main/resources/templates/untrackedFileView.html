@@ -65,6 +65,10 @@
 </head>
 <body>
 <div class="contentDiv">
+    <legend>
+        <strong>新增文件预览</a></strong>
+    </legend>
+    <strong><p>本地路径：<span th:text="${filePath}"></span></p></strong>
     <div th:if="${exception}" th:text="${exceptionMessage}"></div>
     <pre th:if="${!exception}"><code class="java" th:text="${fileContent}"></code></pre>
 </div>
