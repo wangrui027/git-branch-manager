@@ -56,6 +56,9 @@
                 class="btn btn-danger custom-a" data-toggle="modal"
                 data-target="#deleteTagModal">删除标签
         </button>
+        <button class="btn btn-primary custom-a" onclick="pullAll();" data-toggle="modal"
+                data-target="#featuresLegendModal">使用指南
+        </button>
     </div>
     <hr/>
     <table class="table table-hover table-bordered">
@@ -70,7 +73,8 @@
         </thead>
         <tbody>
         <tr th:each="project : ${projects}">
-            <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}" th:href="${project.gitLabUrl}"></a></td>
+            <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}"
+                                            th:href="${project.gitLabUrl}"></a></td>
             <td>
                 <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
                 <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
@@ -89,9 +93,6 @@
         </tr>
         </tbody>
     </table>
-    <hr/>
-    <strong style="font-size: 21px;"><a href="javascript:void(0);" data-toggle="modal"
-                                        data-target="#featuresLegendModal">使用指南</a></strong>
 </div>
 <input id="global-copy-textarea"/>
 <script>
@@ -482,7 +483,7 @@
                         <li>不允许直接在<strong>&nbsp;master&nbsp;</strong>分支推送代码，<strong>&nbsp;master&nbsp;</strong>分支仅允许拉取代码、创建分支、切换分支、创建标签和删除标签操作
                         </li>
                         <li>新建分支后需主动推送代码到远程服务器，每次推送代码仅推送当前分支</li>
-                        <li>删除分支后程序自动删除远程服务器上对应的分支</li>
+                        <li>删除分支后程序自动删除远程服务器上对应的分支，同时拉取<strong>&nbsp;master&nbsp;</strong>的最新代码</li>
                         <li>第一次切换到某分支时，程序主动从服务器拉取代码，后面再次切换到该分支不在主动拉取代码，如需更新代码，请点击【拉取代码】按钮手动拉取</li>
                         <li><strong>master&nbsp;</strong>分支和<strong>&nbsp;develop&nbsp;</strong>分支不允许删除</li>
                         <li>标签创建之后程序自动推送该标签到服务器</li>
