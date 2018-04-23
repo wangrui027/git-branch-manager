@@ -38,6 +38,10 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
      * 默认远程主机
      */
     private static final String ORIGIN = "origin";
+    /**
+     * 日志分隔符，用于每次对一个项目操作的结束分隔符
+     */
+    private static final String LOG_SEPARATOR = "---------------------------当前项目处理完毕---------------------------";
 
     public GitRepositoryServiceImpl() {
         this.allowHosts = new CredentialsProvider() {
@@ -89,12 +93,18 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             logger.info("克隆仓库完毕：{}", gitProject.getRemoteUrl());
         } else {
             Git git = Git.open(file);
-            logger.info("拉取仓库开始：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
-            git.pull().setCredentialsProvider(allowHosts).call();
+            BranchTypeEnum branchType = getBranchType(git, gitProject.getCurrBranch());
+            if(BranchTypeEnum.LOCAL == branchType){
+                logger.info("本地分支不做拉取：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
+            }else{
+                logger.info("拉取仓库开始：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
+                git.pull().setCredentialsProvider(allowHosts).call();
+                logger.info("拉取仓库完毕：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
+            }
             git.close();
-            logger.info("拉取仓库完毕：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
         }
         getAllRemoteBranch(gitProject);
+        logger.info(LOG_SEPARATOR);
         return true;
     }
 
@@ -163,10 +173,13 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
+            logger.info("创建分支开始：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             Git git = Git.open(file);
             git.branchCreate().setName(branchName).call();
             git.checkout().setName(branchName).call();
             git.close();
+            logger.info("创建分支完毕：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
+            logger.info(LOG_SEPARATOR);
             return true;
         }
         return false;
@@ -186,6 +199,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             git.checkout().setName(branchName).call();
             git.close();
             logger.info("切换分支完毕：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
+            logger.info(LOG_SEPARATOR);
             return true;
         }
         return false;
@@ -243,6 +257,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean push(GitProject gitProject, String message) throws IOException, GitAPIException {
+        logger.info("代码推送开始：{}，message：{}", gitProject.getRemoteUrl(), message);
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
@@ -256,11 +271,14 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         }
         git.push().setPushAll().setCredentialsProvider(allowHosts).call();
         git.close();
+        logger.info("代码推送完毕：{}", gitProject.getRemoteUrl());
+        logger.info(LOG_SEPARATOR);
         return true;
     }
 
     @Override
     public boolean deleteBranch(GitProject gitProject) throws IOException, GitAPIException {
+        logger.info("删除分支开始：{}", gitProject.getRemoteUrl());
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
@@ -279,6 +297,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             }
         }
         git.close();
+        logger.info("删除分支完毕：{}", gitProject.getRemoteUrl());
+        logger.info(LOG_SEPARATOR);
         return true;
     }
 
@@ -296,12 +316,15 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean createTag(GitProject gitProject, String tagName, String tagLog) throws IOException, GitAPIException {
+        logger.info("创建标签开始：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.tag().setName(tagName).setMessage(tagLog).call();
         git.push().setPushTags().call();
         git.close();
+        logger.info("创建标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
+        logger.info(LOG_SEPARATOR);
         return false;
     }
 
