@@ -22,15 +22,6 @@
     <label style="font-size: 16px;">当前工作分支：<span th:if="${!#lists.isEmpty(projects)}"
                                                  th:text="${projects[0].currBranch}">master</span></label>
     <table class="table table-hover table-bordered">
-        <colgroup>
-            <col style="width: 240px;">
-            <col>
-            <col style="width: 330px;">
-            <col>
-            <col>
-            <col style="width: 150px;">
-            <col style="width: 75px;">
-        </colgroup>
         <thead>
         <th>仓库名称</th>
         <th>文件状态</th>
@@ -42,7 +33,7 @@
         </thead>
         <tbody>
         <tr th:each="project : ${projects}">
-            <td th:text="${project.name}" th:title="${project.remoteUrl}"></td>
+            <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}" th:href="${project.gitLabUrl}"></a></td>
             <td>
                 <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
                 <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>

@@ -19,6 +19,11 @@ public class GitProject {
     private String remoteUrl;
 
     /**
+     * GitLab的项目地址
+     */
+    private String gitLabUrl;
+
+    /**
      * 最后提交id
      */
     private String lastCommitId;
@@ -87,6 +92,16 @@ public class GitProject {
 
     public void setRemoteUrl(String remoteUrl) {
         this.remoteUrl = remoteUrl;
+        int index1 = remoteUrl.indexOf("git@");
+        int index2 = remoteUrl.lastIndexOf(":");
+        if (index1 > -1 && index2 > index1 && remoteUrl.endsWith(".git")) {
+            String ip = remoteUrl.substring(index1 + "git@".length(), index2);
+            gitLabUrl = "http://" + ip + "/" + remoteUrl.substring(index2 + 1, remoteUrl.lastIndexOf(".git"));
+        }
+    }
+
+    public String getGitLabUrl() {
+        return gitLabUrl;
     }
 
     public String getLastCommitId() {
@@ -145,15 +160,15 @@ public class GitProject {
         return tagList;
     }
 
-    public Set<String> getUntrackedSet(){
+    public Set<String> getUntrackedSet() {
         return untrackedSet;
     }
 
-    public Set<String> getModifiedSet(){
+    public Set<String> getModifiedSet() {
         return modifiedSet;
     }
 
-    public Set<String> getMissingSet(){
+    public Set<String> getMissingSet() {
         return missingSet;
     }
 
