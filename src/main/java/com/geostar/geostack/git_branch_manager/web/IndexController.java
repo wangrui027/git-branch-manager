@@ -208,12 +208,14 @@ public class IndexController {
     }
 
     /**
+     * 文件状态列表详情
+     *
      * @param model
      * @param projectName
      * @return
      */
     @RequestMapping({"/fileListDetails/{name}"})
-    public String fileDetails(Model model, @PathVariable(value = "name") String projectName) {
+    public String fileListDetails(Model model, @PathVariable(value = "name") String projectName) {
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             if (projectName.equals(gitProject.getName())) {
@@ -232,6 +234,7 @@ public class IndexController {
 
     /**
      * 新增文件预览
+     *
      * @param model
      * @param request
      * @return
@@ -244,7 +247,7 @@ public class IndexController {
         for (GitProject gitProject : projects) {
             if (projectName.equals(gitProject.getName())) {
                 try {
-                    String fileName = URLDecoder.decode(path.substring(projectName.length()+1, path.length()), "UTF-8");
+                    String fileName = URLDecoder.decode(path.substring(projectName.length() + 1, path.length()), "UTF-8");
                     String fileContent = gitRepositoryService.getFileContent(gitProject, fileName);
                     if (fileName.contains(File.separator)) {
                         fileName = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
@@ -260,6 +263,29 @@ public class IndexController {
             }
         }
         return "untrackedFileView";
+    }
+
+    /**
+     * 删除标签
+     *
+     * @param model
+     * @param tagName
+     * @return
+     */
+    @RequestMapping({"/deleteTag/{tagName}"})
+    public String deleteTag(Model model, @PathVariable(value = "tagName") String tagName) {
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            try {
+                gitRepositoryService.deleteTag(gitProject, tagName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }
+        }
+        modelBuild(model, projects);
+        return INDEX_HTML;
     }
 
     /**

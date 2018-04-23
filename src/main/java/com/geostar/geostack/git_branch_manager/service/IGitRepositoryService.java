@@ -59,6 +59,7 @@ public interface IGitRepositoryService {
 
     /**
      * 获取所有项目的分支交集
+     *
      * @param projects
      * @return
      */
@@ -66,6 +67,7 @@ public interface IGitRepositoryService {
 
     /**
      * 创建标签
+     *
      * @param gitProject
      * @param tagName
      * @param tagLog
@@ -75,6 +77,7 @@ public interface IGitRepositoryService {
 
     /**
      * 获取所有项目的标签交集
+     *
      * @param projects
      * @return
      */
@@ -82,9 +85,19 @@ public interface IGitRepositoryService {
 
     /**
      * 获取文件内容
+     *
      * @param gitProject
      * @param fileName
      * @return
      */
     String getFileContent(GitProject gitProject, String fileName) throws IOException;
+
+    /**
+     * 删除标签
+     *
+     * @param gitProject
+     * @param tagName
+     * @return
+     */
+    boolean deleteTag(GitProject gitProject, String tagName) throws IOException, GitAPIException;
 }

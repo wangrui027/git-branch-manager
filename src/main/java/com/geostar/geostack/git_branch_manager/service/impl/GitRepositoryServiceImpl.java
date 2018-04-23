@@ -278,7 +278,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean deleteBranch(GitProject gitProject) throws IOException, GitAPIException {
-        logger.info("删除分支开始：{}", gitProject.getRemoteUrl());
+        logger.info("删除分支开始：{}，分支：{}", gitProject.getRemoteUrl(), gitProject.getCurrBranch());
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
@@ -297,7 +297,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             }
         }
         git.close();
-        logger.info("删除分支完毕：{}", gitProject.getRemoteUrl());
+        logger.info("删除分支完毕：{}，分支：{}", gitProject.getRemoteUrl(), gitProject.getCurrBranch());
         logger.info(LOG_SEPARATOR);
         return true;
     }
@@ -346,6 +346,39 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + fileName);
         String content = FileUtils.readFileToString(file, "UTF-8");
         return content;
+    }
+
+    /**
+     * 删除标签，先删除本地标签，再删除远程标签
+     * @param gitProject
+     * @param tagName
+     * @return
+     * @throws IOException
+     * @throws GitAPIException
+     */
+    @Override
+    public boolean deleteTag(GitProject gitProject, String tagName) throws IOException, GitAPIException {
+        logger.info("删除标签开始：{}，标签：{}", gitProject.getRemoteUrl(), tagName);
+        String workHome = gitRepositoryConfig.getWorkHome();
+        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        Git git = Git.open(file);
+        List<Ref> refs = git.tagList().call();
+        git.tagDelete().setTags(tagName).call();
+        String tagPrefix = "refs/tags/";
+        for (Ref ref : refs) {
+            String refName = ref.getName();
+            if (refName.equals(tagPrefix + tagName)) {
+                RefSpec refSpec = new RefSpec()
+                        .setSource(null)
+                        .setDestination(refName);
+                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).call();
+                break;
+            }
+        }
+        git.close();
+        logger.info("删除标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagName);
+        logger.info(LOG_SEPARATOR);
+        return true;
     }
 
     /**

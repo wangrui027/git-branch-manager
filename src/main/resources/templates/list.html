@@ -83,7 +83,8 @@
             </td>
             <td th:text="${project.lastCommitId}"></td>
             <td>
-                <span th:if="${project.lastCommitUser != null}" th:text="${project.lastCommitUser + ' 于 ' + #dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></span>
+                <span th:if="${project.lastCommitUser != null}"
+                      th:text="${project.lastCommitUser + ' 于 ' + #dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></span>
             </td>
             <td th:text="${project.lastCommitMessage}"></td>
             <td><a data-toggle="tooltip" title="复制远程仓库地址" th:attr="path=${project.remoteUrl}" href="javascript:void(0);"
@@ -185,6 +186,14 @@
         });
     }
 
+    /**
+     * 删除标签
+     */
+    function deleteTag() {
+        var tagName = $("#selectTagName").val();
+        window.location.href = "/deleteTag/" + tagName;
+    }
+
 </script>
 <!-- 文件状态模态框（Modal） -->
 <div class="modal fade" id="fileListDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -238,7 +247,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     取消
                 </button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteTag();">
                     确定
                 </button>
             </div>
