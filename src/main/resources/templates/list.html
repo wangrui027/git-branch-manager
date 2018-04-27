@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.tablesorter.js}"></script>
     <link th:href="@{/bootstrap-3.3.7/css/bootstrap.css}" rel="stylesheet"/>
     <script type="text/javascript" th:src="@{/bootstrap-3.3.7/js/bootstrap.js}"></script>
     <link th:href="@{/css/default.css}" rel="stylesheet"/>
@@ -63,25 +64,22 @@
         </button>
     </div>
     <hr/>
-    <table class="table table-hover table-bordered">
+    <table id="listTable" class="table table-hover table-bordered tablesorter">
         <colgroup>
             <col style="width: 200px">
-            <col style="width: 80px">
+            <col style="width: 90px">
             <col style="width: 100px">
             <col style="width: 150px">
             <col>
             <col style="width: 60px">
         </colgroup>
         <thead>
-        <th>
-            仓库名称
-            <a style="float:right;">^</a>
-        </th>
-        <th>文件状态</th>
-        <th>最后提交人</th>
-        <th>提交时间</th>
-        <th>提交日志</th>
-        <th>操作</th>
+        <th class="header">仓库名称</th>
+        <th class="header">文件状态</th>
+        <th class="header">最后提交人</th>
+        <th class="header">提交时间</th>
+        <th class="header">提交日志</th>
+        <th class="header">操作</th>
         </thead>
         <tbody>
         <tr th:each="project : ${projects}">
@@ -107,6 +105,8 @@
 </div>
 <input id="global-copy-textarea"/>
 <script>
+
+    $("#listTable").tablesorter();
 
     var globalCopyTextarea = document.getElementById("global-copy-textarea");
 

@@ -28,3 +28,22 @@ ul {
     opacity: 0;
     z-index: -10;
 }
+
+table.tablesorter thead tr .header {
+    background-image: url(/images/sort/bg.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+
+table.tablesorter thead tr .tablesorter-headerDesc, table.tablesorter thead tr .tablesorter-headerAsc {
+    background-color: #8dbdd8;
+}
+
+table.tablesorter thead tr .tablesorter-headerDesc {
+    background-image: url(/images/sort/asc.gif);
+}
+
+table.tablesorter thead tr .tablesorter-headerAsc {
+    background-image: url(/images/sort/desc.gif);
+}
