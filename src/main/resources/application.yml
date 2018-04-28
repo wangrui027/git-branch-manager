@@ -48,4 +48,3 @@ projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-spark-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-zabbix-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/soms/geostack-soms.git
-  - git@172.15.103.192:geostack2.5/source/bigdatacenter-platform/fm-datacenter/FMDataCenter.git
