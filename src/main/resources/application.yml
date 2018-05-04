@@ -1,8 +1,8 @@
 server:
   port: 8090
 logging:
-  file: D:\git-repository\log.log
-work-home: D:\git-repository
+  file: E:\Git分支管理\modules\log.log
+work-home: E:\Git分支管理\modules
 projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/GeoCloudActiveMQClient.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-3rd-framework.git
@@ -19,7 +19,6 @@ projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-log.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-manager-parent.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-parent.git
-  - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-patch-builder.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-portal.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-processfactory.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-proxy.git
@@ -41,10 +40,12 @@ projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/drive/container/geostack-docker-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/drive/common/geostack-cloud-parent.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/drive/common/geostack-cloud-common.git
-  - git@172.15.103.192:geostack2.5/source/cloud-platform/usersystem/Usersystem.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-zabbix.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-monitor-common.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-monitor-zabbix.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-spark-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-zabbix-api.git
+  - git@172.15.103.192:geostack2.5/source/cloud-platform/usersystem/Usersystem.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/soms/geostack-soms.git
+  - git@172.15.103.192:geostack2.5/source/bigdatacenter-platform/maven-parent/geostack-fusionmanager-parent.git
+  - git@172.15.103.192:geostack2.5/source/bigdatacenter-platform/fm-datacenter/FMDataCenter.git
