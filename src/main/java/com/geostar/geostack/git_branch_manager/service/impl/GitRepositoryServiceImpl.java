@@ -1,7 +1,9 @@
 package com.geostar.geostack.git_branch_manager.service.impl;
 
 import com.geostar.geostack.git_branch_manager.common.BranchTypeEnum;
+import com.geostar.geostack.git_branch_manager.common.Page;
 import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
+import com.geostar.geostack.git_branch_manager.pojo.GitLog;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
 import org.apache.commons.io.FileUtils;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -386,6 +389,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     /**
      * 合并分支，将被合并分支的修改并入当前工作分支，不使用快进模式
+     *
      * @param gitProject
      * @param currWorkBranch 当前工作分支
      * @param sourceBranch   被合并的分支
@@ -416,6 +420,65 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         logger.info("合并分支完成：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
         logger.info(LOG_SEPARATOR);
         return true;
+    }
+
+    @Override
+    public void getCommitLogs(Page<GitLog> page, String username, String projectName) throws IOException, GitAPIException {
+        List<GitLog> logs = page.getAllData();
+        List<GitProject> gitProjects = this.getAllGitProject();
+        String workHome = gitRepositoryConfig.getWorkHome();
+        for (GitProject gitProject : gitProjects) {
+            File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+            Git git = Git.open(file);
+            Iterable<RevCommit> it = git.log().call();
+            for (RevCommit commit : it) {
+                GitLog log = new GitLog();
+                log.setProjectName(gitProject.getName());
+                log.setMessage(commit.getShortMessage());
+                log.setUsername(commit.getAuthorIdent().getName());
+                log.setCommitId(commit.getId().getName());
+                log.setCommitTime(new Date(new Long(commit.getCommitTime()) * 1000));
+                if (username == null && projectName == null) {
+                    logs.add(log);
+                } else if (username != null && projectName != null) {
+                    if (log.getUsername().equals(username) && log.getProjectName().equals(projectName)) {
+                        logs.add(log);
+                    }
+                } else if (username != null) {
+                    if (log.getUsername().equals(username)) {
+                        logs.add(log);
+                    }
+                } else if (projectName != null) {
+                    if (log.getProjectName().equals(projectName)) {
+                        logs.add(log);
+                    }
+                }
+            }
+        }
+        Collections.sort(logs, (arg0, arg1) -> {
+            long time0 = arg0.getCommitTime().getTime();
+            long time1 = arg1.getCommitTime().getTime();
+            if (time1 > time0) {
+                return 1;
+            } else if (time1 == time0) {
+                return 0;
+            } else {
+                return -1;
+            }
+        });
+        int start = page.getPageIndex() * page.getPageSize();
+        int end = ((page.getPageIndex() + 1) * page.getPageSize()) - 1;
+        for (int i = start; i <= end; i++) {
+            page.getData().add(page.getAllData().get(i));
+        }
+        page.setTotalDataNum(page.getAllData().size());
+        int totalPageNum;
+        if (page.getTotalDataNum() % page.getPageSize() == 0) {
+            totalPageNum = page.getTotalDataNum() / page.getPageSize();
+        } else {
+            totalPageNum = page.getTotalDataNum() / page.getPageSize() + 1;
+        }
+        page.setTotalPageNum(totalPageNum);
     }
 
     /**

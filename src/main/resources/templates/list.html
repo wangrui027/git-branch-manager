@@ -134,7 +134,7 @@
     function createBranchAll() {
         var branchName = $("#newBranchName").val();
         if (branchName != "") {
-            window.location.href = "/createBranch/" + branchName;
+            window.location.href = "/createBranch/" + doubleEncodeText(branchName);
         }
     }
 
@@ -144,7 +144,7 @@
     function checkoutAll(obj) {
         var branchName = $(obj).html();
         if (branchName != "") {
-            window.location.href = "/switchBranch/" + branchName;
+            window.location.href = "/switchBranch/" + doubleEncodeText(branchName);
         }
     }
 
@@ -155,7 +155,7 @@
         $('#pushModal').modal('hide');
         var pushLog = $("#inputPushLog").val();
         if (pushLog != "") {
-            window.location.href = "/push/" + pushLog;
+            window.location.href = "/push/" + doubleEncodeText(pushLog);
         } else {
             $('#pushErrorModal').modal('show');
         }
@@ -181,7 +181,7 @@
         var tagName = $("#inputTagName").val();
         var tagLog = $("#inputTagLog").val();
         if (tagName != "" && tagLog != "") {
-            window.location.href = "/createTag/" + tagName + "/" + tagLog;
+            window.location.href = "/createTag/" + doubleEncodeText(tagName) + "/" + doubleEncodeText(tagLog);
         } else {
             $('#createTagErrorModal').modal('show');
         }
@@ -192,7 +192,7 @@
      */
     function deleteTag() {
         var tagName = $("#selectTagName").val();
-        window.location.href = "/deleteTag/" + tagName;
+        window.location.href = "/deleteTag/" + doubleEncodeText(tagName);
     }
 
     /**
@@ -202,7 +202,7 @@
         var currentBranch = $("#mergeCurrentBranch").text().trim();
         var selectBranch = $("#selectBranch").val();
         var message = $("#mergeBranchMessage").val();
-        window.location.href = "/mergeBranch/" + currentBranch + "/" + selectBranch + "/" + encodeURIComponent(message);
+        window.location.href = "/mergeBranch/" + doubleEncodeText(currentBranch) + "/" + doubleEncodeText(selectBranch) + "/" + doubleEncodeText(message);
     }
 
     /**
@@ -214,6 +214,15 @@
         var commitid = $(obj).attr("commitid");
         $("#commitId").html(commitid);
         $('#operateModal').modal('show');
+    }
+
+    /**
+     * 将制定文本进行两次编码
+     * @param text
+     * @returns {string}
+     */
+    function doubleEncodeText(text) {
+        return encodeURIComponent(encodeURIComponent(text));
     }
 
 </script>

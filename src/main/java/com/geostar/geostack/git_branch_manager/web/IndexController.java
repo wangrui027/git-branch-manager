@@ -1,6 +1,8 @@
 package com.geostar.geostack.git_branch_manager.web;
 
+import com.geostar.geostack.git_branch_manager.common.Page;
 import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
+import com.geostar.geostack.git_branch_manager.pojo.GitLog;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +20,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -96,11 +101,15 @@ public class IndexController {
      * 创建分支
      *
      * @param model
-     * @param branchName
      * @return
      */
     @RequestMapping({"/createBranch/{branchName}"})
-    public String createBranch(Model model, @PathVariable("branchName") String branchName) {
+    public String createBranch(Model model, @PathVariable(value = "branchName") String branchName) {
+        try {
+            branchName = URLDecoder.decode(branchName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -121,11 +130,15 @@ public class IndexController {
      * 切换分支
      *
      * @param model
-     * @param branchName
      * @return
      */
     @RequestMapping({"/switchBranch/{branchName}"})
-    public String switchBranchAll(Model model, @PathVariable("branchName") String branchName) {
+    public String switchBranchAll(Model model, @PathVariable(value = "branchName") String branchName) {
+        try {
+            branchName = URLDecoder.decode(branchName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -149,6 +162,11 @@ public class IndexController {
      */
     @RequestMapping({"/push/{message}"})
     public String push(Model model, @PathVariable(value = "message") String inputMessage) {
+        try {
+            inputMessage = URLDecoder.decode(inputMessage, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -197,6 +215,12 @@ public class IndexController {
      */
     @RequestMapping({"/createTag/{tagName}/{tagLog}"})
     public String createTag(Model model, @PathVariable(value = "tagName") String tagName, @PathVariable(value = "tagLog") String tagLog) {
+        try {
+            tagName = URLDecoder.decode(tagName, "UTF-8");
+            tagLog = URLDecoder.decode(tagLog, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -282,6 +306,11 @@ public class IndexController {
      */
     @RequestMapping({"/deleteTag/{tagName}"})
     public String deleteTag(Model model, @PathVariable(value = "tagName") String tagName) {
+        try {
+            tagName = URLDecoder.decode(tagName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
         for (GitProject gitProject : projects) {
             try {
@@ -304,13 +333,14 @@ public class IndexController {
      * @param sourceBranch   被合并分支
      * @return
      */
-    @RequestMapping({"/mergeBranch/{currWorkBranch}/{sourceBranch}/**"})
+    @RequestMapping({"/mergeBranch/{currWorkBranch}/{sourceBranch}/{message}"})
     public String mergeBranch(Model model, @PathVariable(value = "currWorkBranch") String currWorkBranch,
                               @PathVariable(value = "sourceBranch") String sourceBranch,
-                              HttpServletRequest request) {
-        String message = null;
+                              @PathVariable(value = "message") String message) {
         try {
-            message = URLDecoder.decode(request.getRequestURI().substring(("/mergeBranch/"+currWorkBranch+"/"+sourceBranch+"/").length(), request.getRequestURI().length()), "UTF-8");
+            currWorkBranch = URLDecoder.decode(currWorkBranch, "UTF-8");
+            sourceBranch = URLDecoder.decode(sourceBranch, "UTF-8");
+            message = URLDecoder.decode(message, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -327,6 +357,37 @@ public class IndexController {
         modelBuild(model, projects);
         return INDEX_HTML;
     }
+
+    /**
+     * 分页获取Git日志
+     *
+     * @param username
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping({"/getCommitLogs", "/getCommitLogs/{username}", "/getCommitLogs/{username}/{projectName}"})
+    public List<GitLog> getCommitLogs(
+            @PathVariable(value = "username", required = false) String username,
+            @PathVariable(value = "projectName", required = false) String projectName) {
+        Page<GitLog> page = new Page<>();
+        page.setPageIndex(0);
+        try {
+            gitRepositoryService.getCommitLogs(page, username, projectName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+        Set<String> userSet = new HashSet<>();
+        for (GitLog log : page.getData()) {
+            userSet.add(log.getUsername());
+        }
+        String[] userArr = new String[userSet.size()];
+        userArr = userSet.toArray(userArr);
+        Arrays.sort(userArr);
+        return page.getAllData();
+    }
+
 
     /**
      * 构建model属性

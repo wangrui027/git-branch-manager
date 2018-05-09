@@ -1,5 +1,7 @@
 package com.geostar.geostack.git_branch_manager.service;
 
+import com.geostar.geostack.git_branch_manager.common.Page;
+import com.geostar.geostack.git_branch_manager.pojo.GitLog;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -110,4 +112,13 @@ public interface IGitRepositoryService {
      * @return
      */
     boolean mergeBranch(GitProject gitProject, String currWorkBranch, String sourceBranch, String message) throws IOException, GitAPIException;
+
+    /**
+     * 获取日志
+     *
+     * @param page
+     * @param username
+     * @param projectName
+     */
+    void getCommitLogs(Page<GitLog> page, String username, String projectName) throws IOException, GitAPIException;
 }
