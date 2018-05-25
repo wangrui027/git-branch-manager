@@ -47,3 +47,4 @@ projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/zabbix/geostack-zabbix-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/usersystem/Usersystem.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/soms/geostack-soms.git
+  - git@172.15.103.192:geostack2.5/source/cloud-platform/soms/geostack-topology.git
