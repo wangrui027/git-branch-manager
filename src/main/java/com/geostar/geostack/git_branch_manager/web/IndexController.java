@@ -237,6 +237,37 @@ public class IndexController {
     }
 
     /**
+     * 从某标签检出代码到某新分支
+     *
+     * @param model
+     * @param tagName
+     * @param branchName
+     * @return
+     */
+    @RequestMapping({"/createBranchByTag/{tagName}/{branchName}"})
+    public String createBranchByTag(Model model, @PathVariable(value = "tagName") String tagName, @PathVariable(value = "branchName") String branchName) {
+        try {
+            tagName = URLDecoder.decode(tagName, "UTF-8");
+            branchName = URLDecoder.decode(branchName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
+        for (GitProject gitProject : projects) {
+            try {
+                gitRepositoryService.createBranchByTag(gitProject, tagName, branchName);
+                gitRepositoryService.updateGitProjectInfo(gitProject);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }
+        }
+        modelBuild(model, projects);
+        return INDEX_HTML;
+    }
+
+    /**
      * 文件状态列表详情
      *
      * @param model

@@ -127,6 +127,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         gitProject.getUntrackedSet().clear();
         gitProject.getModifiedSet().clear();
         gitProject.getMissingSet().clear();
+        gitProject.getConflictingSet().clear();
         String workHome = gitRepositoryConfig.getWorkHome();
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
@@ -169,6 +170,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             gitProject.getUntrackedSet().addAll(status.getUntracked());
             gitProject.getModifiedSet().addAll(status.getModified());
             gitProject.getMissingSet().addAll(status.getMissing());
+            gitProject.getConflictingSet().addAll(status.getConflicting());
             git.close();
         }
         return true;
@@ -331,6 +333,29 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         logger.info("创建标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
         logger.info(LOG_SEPARATOR);
         return false;
+    }
+
+    @Override
+    public void createBranchByTag(GitProject gitProject, String tagName, String branchName) throws IOException, GitAPIException {
+        updateGitProjectInfo(gitProject);
+        logger.info("从{}标签检出代码到{}分支，project：{}", tagName, branchName, gitProject.getRemoteUrl());
+        String workHome = gitRepositoryConfig.getWorkHome();
+        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        Git git = Git.open(file);
+        List<Ref> tagRefs = git.tagList().call();
+        for (Ref tagRef : tagRefs) {
+            String currTagName = tagRef.getName();
+            currTagName = currTagName.substring("refs/tags/".length(), currTagName.length());
+            if (currTagName.equals(tagName)){
+                Repository repository = git.getRepository();
+                String commitId = repository.peel(tagRef).getPeeledObjectId().getName();
+                git.checkout().setCreateBranch(true).setStartPoint(commitId).setName(branchName).call();
+                repository.close();
+                break;
+            }
+        }
+        git.close();
+        logger.info(LOG_SEPARATOR);
     }
 
     @Override

@@ -78,6 +78,15 @@ public interface IGitRepositoryService {
     boolean createTag(GitProject gitProject, String tagName, String tagLog) throws IOException, GitAPIException;
 
     /**
+     * 从某标签检出代码到某新分支
+     *
+     * @param gitProject
+     * @param tagName
+     * @param branchName
+     */
+    void createBranchByTag(GitProject gitProject, String tagName, String branchName) throws IOException, GitAPIException;
+
+    /**
      * 获取所有项目的标签交集
      *
      * @param projects
@@ -121,4 +130,5 @@ public interface IGitRepositoryService {
      * @param projectName
      */
     void getCommitLogs(Page<GitLog> page, String username, String projectName) throws IOException, GitAPIException;
+
 }

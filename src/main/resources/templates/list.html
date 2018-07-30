@@ -91,6 +91,9 @@
                 <span>[修改:<span th:text="${#sets.size(project.modifiedSet)}"></span>]</span>
                 <br/>
                 <span>[删除:<span th:text="${#sets.size(project.missingSet)}"></span>]</span>
+                <br/>
+                <span th:if="${#sets.size(project.conflictingSet) > 0}" style="color:red;">[冲突:<span th:text="${#sets.size(project.conflictingSet)}"></span>]</span>
+                <span th:if="${#sets.size(project.conflictingSet) <= 0}">[冲突:<span th:text="${#sets.size(project.conflictingSet)}"></span>]</span>
             </td>
             <td th:text="${project.lastCommitUser}"></td>
             <td th:text="${#dates.format(project.lastCommitDate,  'yyyy-MM-dd HH:mm:dd')}"></td>
@@ -132,9 +135,15 @@
      * 创建分支
      */
     function createBranchAll() {
+        var createType = $("input[type=radio][name=createTypeFromBranch]:checked").val();
         var branchName = $("#newBranchName").val();
+        var tagName = $("#createBranchToTagName").val();
         if (branchName != "") {
-            window.location.href = "/createBranch/" + doubleEncodeText(branchName);
+            if (createType == 0) {
+                window.location.href = "/createBranch/" + doubleEncodeText(branchName);
+            } else if (createType == 1 && tagName != "") {
+                window.location.href = "/createBranchByTag/" + doubleEncodeText(tagName) + "/" + doubleEncodeText(branchName);
+            }
         }
     }
 
@@ -224,6 +233,15 @@
     function doubleEncodeText(text) {
         return encodeURIComponent(encodeURIComponent(text));
     }
+
+    $(document).on("click", "input[type=radio][name=createTypeFromBranch]", function (event) {
+        var type = $(event.target).val();
+        if (type == 1) {
+            $("#createBranchToTagNameP").show();
+        } else {
+            $("#createBranchToTagNameP").hide();
+        }
+    });
 
 </script>
 
@@ -553,6 +571,18 @@
             </div>
             <div class="modal-body">
                 <p>
+                    <input type="radio" name="createTypeFromBranch" id="createTypeFromBranch0" value="0" checked/>
+                    <label for="createTypeFromBranch0">以当前版本库创建</label>
+                    <input type="radio" name="createTypeFromBranch" id="createTypeFromBranch1" value="1"/>
+                    <label for="createTypeFromBranch1">从某标签创建</label>
+                </p>
+                <p id="createBranchToTagNameP" style="display: none;">
+                    标签名称：<select class="form-control" style="width:auto;display: inline;" id="createBranchToTagName">
+                    <option value=""> - 请选择 -</option>
+                    <option th:each="tag : ${tagIntersect}" th:value="${tag}" th:text="${tag}"></option>
+                </select>
+                </p>
+                <p>
                     分支名称：<input id="newBranchName" class="form-control" style="width:auto;display: inline;"/>
                 </p>
             </div>
@@ -584,7 +614,7 @@
                     <li><strong>&nbsp;&nbsp;按钮说明：</strong></li>
                     <ol>
                         <li><strong>【拉取代码】：</strong>拉取当前分支最新代码，第一次直接克隆<strong> master </strong>分支</li>
-                        <li><strong>【创建分支】：</strong>以当前分支为基础创建新的分支</li>
+                        <li><strong>【创建分支】：</strong>以当前分支后某一标签为基础创建新的分支</li>
                         <li><strong>【切换分支】：</strong>切换到指定分支并拉取最新代码</li>
                         <li><strong>【删除分支】：</strong>删除指定分支，不允许删除<strong>&nbsp;master&nbsp;</strong>分支和<strong>&nbsp;develop&nbsp;</strong>分支
                         </li>
