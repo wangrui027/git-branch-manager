@@ -78,6 +78,11 @@ public class GitProject {
      */
     private final Set<String> missingSet = new HashSet<>();
 
+    /**
+     * 仓库文件冲突集合
+     */
+    private final Set<String> conflictingSet = new HashSet<>();
+
     public String getName() {
         return name;
     }
@@ -170,6 +175,10 @@ public class GitProject {
 
     public Set<String> getMissingSet() {
         return missingSet;
+    }
+
+    public Set<String> getConflictingSet() {
+        return conflictingSet;
     }
 
 }
