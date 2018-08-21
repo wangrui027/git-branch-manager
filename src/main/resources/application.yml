@@ -14,6 +14,7 @@ projects:
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-databasegoods.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-dependence.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-dictionary.git
+  - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-es-monitor-api.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-framework.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-gistools.git
   - git@172.15.103.192:geostack2.5/source/cloud-platform/core-components/geostack-log.git
