@@ -38,6 +38,7 @@ projects:
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/cloud/geostack-openstack-limits.git
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/cloud/geostack-openstack-serverinfo.git
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/cloud/geostack-ucloud-api.git
+  - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/container/geostack-docker-engine-api.git
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/container/geostack-cloud-docker.git
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/container/geostack-cloud-libvirt.git
   - git@yf-gitlab.geostar.com.cn:geostack2.5/source/cloud-platform/drive/container/geostack-docker-api.git
