@@ -40,7 +40,7 @@
                         onclick="checkoutAll(this)"></a></li>
             </ul>
         </div>
-        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects) and projects[0].currBranch eq 'master'}"
+        <button th:if="${!#lists.isEmpty(branchIntersect) and !#lists.isEmpty(projects)}"
                 class="btn btn-primary custom-a" data-toggle="modal"
                 data-target="#createTagModal">创建标签
         </button>
@@ -416,7 +416,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title">
-                    创建分支
+                    创建标签
                 </h4>
             </div>
             <div class="modal-body">
@@ -490,6 +490,9 @@
                 </p>
                 <p>
                     提交日志：<input id="inputPushLog" class="form-control" style="width:auto;display: inline;"/>
+                </p>
+                <p>
+                    说明：<span>如果所有本地代码已经提交，则此处的提交日志不会出现在项目活动日志中。</span>
                 </p>
             </div>
             <div class="modal-footer">
@@ -574,7 +577,7 @@
                     <input type="radio" name="createTypeFromBranch" id="createTypeFromBranch0" value="0" checked/>
                     <label for="createTypeFromBranch0">以当前版本库创建</label>
                     <input type="radio" name="createTypeFromBranch" id="createTypeFromBranch1" value="1"/>
-                    <label for="createTypeFromBranch1">从某标签创建</label>
+                    <label for="createTypeFromBranch1">以某标签创建</label>
                 </p>
                 <p id="createBranchToTagNameP" style="display: none;">
                     标签名称：<select class="form-control" style="width:auto;display: inline;" id="createBranchToTagName">
