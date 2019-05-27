@@ -38,7 +38,6 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     private static final Logger logger = LoggerFactory.getLogger(GitRepositoryServiceImpl.class);
     @Autowired
     private GitRepositoryConfig gitRepositoryConfig;
-    private CredentialsProvider allowHosts;
     /**
      * 默认远程主机
      */
@@ -48,9 +47,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
      */
     private static final String LOG_SEPARATOR = "---------------------------当前项目处理完毕---------------------------";
 
-    @PostConstruct
-    public void initAllowHosts() {
-        this.allowHosts = new UsernamePasswordCredentialsProvider(gitRepositoryConfig.getGitUsername(), gitRepositoryConfig.getGitPassword());
+    private CredentialsProvider reloadAllowHosts(){
+        return new UsernamePasswordCredentialsProvider(gitRepositoryConfig.getGitUsername(), gitRepositoryConfig.getGitPassword());
     }
 
 
@@ -68,7 +66,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             Git git = Git.cloneRepository()
                     .setURI(gitProject.getRemoteUrl())
                     .setDirectory(file)
-                    .setCredentialsProvider(allowHosts)
+                    .setCredentialsProvider(reloadAllowHosts())
                     .call();
             git.close();
             logger.info("克隆仓库完毕：{}", gitProject.getRemoteUrl());
@@ -79,7 +77,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 logger.info("本地分支不做拉取：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
             } else {
                 logger.info("拉取仓库开始：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
-                git.pull().setCredentialsProvider(allowHosts).call();
+                git.pull().setCredentialsProvider(reloadAllowHosts()).call();
                 logger.info("拉取仓库完毕：{}，分支：{}", gitProject.getRemoteUrl(), git.getRepository().getBranch());
             }
             git.close();
@@ -176,7 +174,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             Git git = Git.open(file);
             BranchTypeEnum branchType = getBranchType(git, branchName);
             if (BranchTypeEnum.REMOTE == branchType) {
-                git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).setCredentialsProvider(allowHosts).call();
+                git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).setCredentialsProvider(reloadAllowHosts()).call();
             }
             git.checkout().setName(branchName).call();
             git.close();
@@ -251,7 +249,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             git.add().addFilepattern(".").call();
             git.commit().setAll(true).setMessage(message).call();
         }
-        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
+        git.push().setPushAll().setCredentialsProvider(reloadAllowHosts()).call();
         git.close();
         logger.info("代码推送完毕：{}", gitProject.getRemoteUrl());
         logger.info(LOG_SEPARATOR);
@@ -274,7 +272,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 RefSpec refSpec = new RefSpec()
                         .setSource(null)
                         .setDestination("refs/heads/" + gitProject.getCurrBranch());
-                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(allowHosts).call();
+                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(reloadAllowHosts()).call();
                 break;
             }
         }
@@ -303,7 +301,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.tag().setName(tagName).setMessage(tagLog).call();
-        git.push().setPushTags().setCredentialsProvider(allowHosts).call();
+        git.push().setPushTags().setCredentialsProvider(reloadAllowHosts()).call();
         git.close();
         logger.info("创建标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
         logger.info(LOG_SEPARATOR);
@@ -377,7 +375,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 RefSpec refSpec = new RefSpec()
                         .setSource(null)
                         .setDestination(refName);
-                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(allowHosts).call();
+                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(reloadAllowHosts()).call();
                 break;
             }
         }
@@ -415,7 +413,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 setFastForward(MergeCommand.FastForwardMode.NO_FF).
                 setMessage(message).
                 call();
-        git.push().setPushAll().setCredentialsProvider(allowHosts).setCredentialsProvider(allowHosts).call();
+        git.push().setPushAll().setCredentialsProvider(reloadAllowHosts()).setCredentialsProvider(reloadAllowHosts()).call();
         git.close();
         logger.info("合并分支完成：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
         logger.info(LOG_SEPARATOR);

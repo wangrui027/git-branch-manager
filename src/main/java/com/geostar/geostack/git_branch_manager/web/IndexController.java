@@ -9,9 +9,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -70,6 +68,15 @@ public class IndexController {
                 e.printStackTrace();
             }
         }
+        modelBuild(model, projects);
+        return "list";
+    }
+
+    @PostMapping("/setGitAccount")
+    public String setGitAccount(Model model, String username, String password){
+        gitRepositoryConfig.setGitUsername(username);
+        gitRepositoryConfig.setGitPassword(password);
+        List<GitProject> projects = gitRepositoryService.getAllGitProject();
         modelBuild(model, projects);
         return "list";
     }
@@ -442,6 +449,7 @@ public class IndexController {
          */
         List<String> tagIntersect = gitRepositoryService.getTagIntersect(projects);
         model.addAttribute("tagIntersect", tagIntersect);
+        model.addAttribute("gitRepositoryConfig", gitRepositoryConfig);
         model.addAllAttributes(Arrays.asList(objects));
     }
 
