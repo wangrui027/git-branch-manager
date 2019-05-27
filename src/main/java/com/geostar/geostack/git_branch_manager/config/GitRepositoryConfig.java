@@ -16,6 +16,10 @@ public class GitRepositoryConfig {
 
     private final List<GitProject> gitProjects = new ArrayList<>();
 
+    private String gitUsername;
+
+    private String gitPassword;
+
     public String getWorkHome() {
         return workHome;
     }
@@ -47,4 +51,19 @@ public class GitRepositoryConfig {
         }
     }
 
+    public String getGitUsername() {
+        return gitUsername;
+    }
+
+    public void setGitUsername(String gitUsername) {
+        this.gitUsername = gitUsername;
+    }
+
+    public String getGitPassword() {
+        return gitPassword;
+    }
+
+    public void setGitPassword(String gitPassword) {
+        this.gitPassword = gitPassword;
+    }
 }

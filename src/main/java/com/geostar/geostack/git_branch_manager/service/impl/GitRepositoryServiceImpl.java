@@ -13,20 +13,19 @@ import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     private static final Logger logger = LoggerFactory.getLogger(GitRepositoryServiceImpl.class);
     @Autowired
     private GitRepositoryConfig gitRepositoryConfig;
-    private final CredentialsProvider allowHosts;
+    private CredentialsProvider allowHosts;
     /**
      * 默认远程主机
      */
@@ -49,35 +48,11 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
      */
     private static final String LOG_SEPARATOR = "---------------------------当前项目处理完毕---------------------------";
 
-    public GitRepositoryServiceImpl() {
-        this.allowHosts = new CredentialsProvider() {
-            @Override
-            public boolean supports(CredentialItem... items) {
-                for (CredentialItem item : items) {
-                    if ((item instanceof CredentialItem.YesNoType)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public boolean get(URIish uri, CredentialItem... items) throws UnsupportedCredentialItem {
-                for (CredentialItem item : items) {
-                    if (item instanceof CredentialItem.YesNoType) {
-                        ((CredentialItem.YesNoType) item).setValue(true);
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public boolean isInteractive() {
-                return false;
-            }
-        };
+    @PostConstruct
+    public void initAllowHosts() {
+        this.allowHosts = new UsernamePasswordCredentialsProvider(gitRepositoryConfig.getGitUsername(), gitRepositoryConfig.getGitPassword());
     }
+
 
     @Override
     public List<GitProject> getAllGitProject() {
@@ -201,7 +176,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
             Git git = Git.open(file);
             BranchTypeEnum branchType = getBranchType(git, branchName);
             if (BranchTypeEnum.REMOTE == branchType) {
-                git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).call();
+                git.fetch().setRemote(ORIGIN).setCheckFetchedObjects(true).setRefSpecs(new RefSpec("refs/heads/" + branchName + ":" + "refs/heads/" + branchName)).setCredentialsProvider(allowHosts).call();
             }
             git.checkout().setName(branchName).call();
             git.close();
@@ -299,7 +274,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 RefSpec refSpec = new RefSpec()
                         .setSource(null)
                         .setDestination("refs/heads/" + gitProject.getCurrBranch());
-                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).call();
+                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(allowHosts).call();
                 break;
             }
         }
@@ -328,7 +303,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.tag().setName(tagName).setMessage(tagLog).call();
-        git.push().setPushTags().call();
+        git.push().setPushTags().setCredentialsProvider(allowHosts).call();
         git.close();
         logger.info("创建标签完毕：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
         logger.info(LOG_SEPARATOR);
@@ -346,7 +321,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         for (Ref tagRef : tagRefs) {
             String currTagName = tagRef.getName();
             currTagName = currTagName.substring("refs/tags/".length(), currTagName.length());
-            if (currTagName.equals(tagName)){
+            if (currTagName.equals(tagName)) {
                 Repository repository = git.getRepository();
                 String commitId = repository.peel(tagRef).getPeeledObjectId().getName();
                 git.checkout().setCreateBranch(true).setStartPoint(commitId).setName(branchName).call();
@@ -402,7 +377,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 RefSpec refSpec = new RefSpec()
                         .setSource(null)
                         .setDestination(refName);
-                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).call();
+                git.push().setRefSpecs(refSpec).setRemote(ORIGIN).setCredentialsProvider(allowHosts).call();
                 break;
             }
         }
@@ -440,7 +415,7 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
                 setFastForward(MergeCommand.FastForwardMode.NO_FF).
                 setMessage(message).
                 call();
-        git.push().setPushAll().setCredentialsProvider(allowHosts).call();
+        git.push().setPushAll().setCredentialsProvider(allowHosts).setCredentialsProvider(allowHosts).call();
         git.close();
         logger.info("合并分支完成：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
         logger.info(LOG_SEPARATOR);
