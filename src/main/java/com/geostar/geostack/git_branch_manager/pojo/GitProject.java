@@ -1,10 +1,6 @@
 package com.geostar.geostack.git_branch_manager.pojo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GitProject {
 
@@ -17,11 +13,6 @@ public class GitProject {
      * 远程地址
      */
     private String remoteUrl;
-
-    /**
-     * GitLab的项目地址
-     */
-    private String gitLabUrl;
 
     /**
      * 最后提交id
@@ -97,16 +88,6 @@ public class GitProject {
 
     public void setRemoteUrl(String remoteUrl) {
         this.remoteUrl = remoteUrl;
-        int index1 = remoteUrl.indexOf("git@");
-        int index2 = remoteUrl.lastIndexOf(":");
-        if (index1 > -1 && index2 > index1 && remoteUrl.endsWith(".git")) {
-            String ip = remoteUrl.substring(index1 + "git@".length(), index2);
-            gitLabUrl = "http://" + ip + "/" + remoteUrl.substring(index2 + 1, remoteUrl.lastIndexOf(".git"));
-        }
-    }
-
-    public String getGitLabUrl() {
-        return gitLabUrl;
     }
 
     public String getLastCommitId() {

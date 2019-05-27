@@ -84,7 +84,7 @@
         <tbody>
         <tr th:each="project : ${projects}">
             <td title="在新窗口打开GitLab项目地址"><a target="_blank" th:text="${project.name}"
-                                            th:href="${project.gitLabUrl}"></a></td>
+                                            th:href="${project.remoteUrl}"></a></td>
             <td>
                 <span>[新增:<span th:text="${#sets.size(project.untrackedSet)}"></span>]</span>
                 <br/>
