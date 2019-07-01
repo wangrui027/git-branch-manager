@@ -36,6 +36,7 @@
         <module>../modules/geostack-dispatch</module>
         <module>../modules/geostack-docker-api</module>
         <module>../modules/geostack-docker-engine-api</module>
+        <module>../modules/geostack-es-monitor-api</module>
         <module>../modules/geostack-framework</module>
         <module>../modules/geostack-gistools</module>
         <module>../modules/geostack-log</module>
