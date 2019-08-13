@@ -34,9 +34,11 @@ projects:
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/web-application/OperationCenter.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-cloudstack.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone6.3.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-openstack.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-ucloud.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-manageone-api.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-manageone-api6.3.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-openstack-limits.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-openstack-serverinfo.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-ucloud-api.git
