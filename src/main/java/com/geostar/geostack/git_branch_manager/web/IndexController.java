@@ -5,27 +5,39 @@ import com.geostar.geostack.git_branch_manager.config.GitRepositoryConfig;
 import com.geostar.geostack.git_branch_manager.pojo.GitLog;
 import com.geostar.geostack.git_branch_manager.pojo.GitProject;
 import com.geostar.geostack.git_branch_manager.service.IGitRepositoryService;
+import org.apache.commons.io.IOUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.Charset;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
 public class IndexController {
 
+    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
     /**
      * 首页对应的模板名称
      */
@@ -73,7 +85,7 @@ public class IndexController {
     }
 
     @PostMapping("/setGitAccount")
-    public String setGitAccount(Model model, String username, String password){
+    public String setGitAccount(Model model, String username, String password) {
         gitRepositoryConfig.setGitUsername(username);
         gitRepositoryConfig.setGitPassword(password);
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
@@ -101,6 +113,7 @@ public class IndexController {
             }
         }
         modelBuild(model, projects);
+        buildPom(projects);
         return INDEX_HTML;
     }
 
@@ -451,6 +464,38 @@ public class IndexController {
         model.addAttribute("tagIntersect", tagIntersect);
         model.addAttribute("gitRepositoryConfig", gitRepositoryConfig);
         model.addAllAttributes(Arrays.asList(objects));
+    }
+
+    /**
+     * 构建最上层的pom文件
+     *
+     * @param projects
+     */
+    private void buildPom(List<GitProject> projects) {
+        File file = new File(gitRepositoryConfig.getWorkHome());
+        try {
+            Document document = DocumentHelper.parseText(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("pom_template.xml"), Charset.forName("UTF-8")));
+            Element modules = document.getRootElement().element("modules");
+            Iterator<Element> it = modules.elementIterator();
+            while (it.hasNext()) {
+                Element element = it.next();
+                modules.remove(element);
+            }
+            for (GitProject project : projects) {
+                Element module = modules.addElement("module");
+                module.setText("../modules/" + project.getName());
+            }
+            String pomPath = file.getParent() + File.separator + "pom" + File.separator + "pom.xml";
+            OutputFormat format = OutputFormat.createPrettyPrint();
+            XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(pomPath), format);
+            xmlWriter.write(document);
+            xmlWriter.close();
+            logger.info("更新本地最上层pom文件，pom文件路径：" + pomPath);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
