@@ -1,60 +1,60 @@
 server:
   port: 8090
+work-home: C:\代码批量管理
 logging:
-  file: C:\Git分支管理\modules\log.out
-work-home: C:\Git分支管理\modules
+  file: ${work-home}\log.out
+modules-home: ${work-home}\modules
 git-username:
 git-password:
 projects:
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/GeoCloudActiveMQClient.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-parent.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-3rd-framework.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-balance-core.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-balance-haproxy.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-cloudstack.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/common/geostack-cloud-parent.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-manager-parent.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/GeoCloudActiveMQClient.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-monitor-center-client.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-test.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-docker-engine-api.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/common/geostack-cloud-common.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-cloudstack.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-docker-api.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-cloud-docker.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-cloud-libvirt.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone6.3.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone6.5.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-openstack.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/common/geostack-cloud-parent.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-ucloud.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-core.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-databasegoods.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dependence.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dictionary.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dispatch.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-docker-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/container/geostack-docker-engine-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-es-monitor-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-framework.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-gistools.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-log.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-ucloud-api.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-manageone-api.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-manageone-api6.3.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-manageone-api6.5.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-manager-parent.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-monitor-center-client.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-monitor-common.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-monitor-zabbix.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-spark-api.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-ucloud.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone6.3.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-manageone6.5.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-openstack-limits.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-openstack-serverinfo.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-orders-resolve.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-parent.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-portal.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-cloud-openstack.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-framework.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-processfactory.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-proxy.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-quartz.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-rest-manage.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-servicegoods.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/soms/geostack-soms.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-spark-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-telescopic.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-test.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-topology.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/drive/cloud/geostack-ucloud-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-zabbix.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-log.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-es-monitor-api.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-zabbix-api.git
-  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/web-application/OperationCenter.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-monitor-common.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-monitor-zabbix.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/zabbix/geostack-zabbix.git
   - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/usersystem/Usersystem.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dictionary.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-portal.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dependence.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-balance-core.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-balance-haproxy.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/soms/geostack-soms.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-orders-resolve.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-dispatch.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-telescopic.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-core.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-databasegoods.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-gistools.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-servicegoods.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-proxy.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/core-components/geostack-topology.git
+  - http://yf-gitlab.geostar.com.cn/geostack-source/cloud-platform/web-application/OperationCenter.git

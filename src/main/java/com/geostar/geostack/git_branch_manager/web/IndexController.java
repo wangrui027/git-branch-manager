@@ -324,12 +324,12 @@ public class IndexController {
         String path = request.getRequestURI().substring(UNTRACKED_FILE_VIEW_PATH_PREFIX.length(), request.getRequestURI().length());
         model.addAttribute("exception", false);
         List<GitProject> projects = gitRepositoryService.getAllGitProject();
-        String workHome = gitRepositoryConfig.getWorkHome();
+        String modulesHome = gitRepositoryConfig.getModulesHome();
         for (GitProject gitProject : projects) {
             if (projectName.equals(gitProject.getName())) {
                 try {
                     String fileName = URLDecoder.decode(path.substring(projectName.length() + 1, path.length()), "UTF-8");
-                    String filePath = workHome + File.separator + gitProject.getName() + File.separator + fileName;
+                    String filePath = modulesHome + File.separator + gitProject.getName() + File.separator + fileName;
                     String fileContent = gitRepositoryService.getFileContent(gitProject, fileName);
                     if (fileName.contains(File.separator)) {
                         fileName = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
@@ -472,7 +472,7 @@ public class IndexController {
      * @param projects
      */
     private void buildPom(List<GitProject> projects) {
-        File file = new File(gitRepositoryConfig.getWorkHome());
+        File file = new File(gitRepositoryConfig.getModulesHome());
         try {
             Document document = DocumentHelper.parseText(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("pom_template.xml"), Charset.forName("UTF-8")));
             Element modules = document.getRootElement().element("modules");
@@ -483,9 +483,9 @@ public class IndexController {
             }
             for (GitProject project : projects) {
                 Element module = modules.addElement("module");
-                module.setText("../modules/" + project.getName());
+                module.setText("modules/" + project.getName());
             }
-            String pomPath = file.getParent() + File.separator + "pom" + File.separator + "pom.xml";
+            String pomPath = file.getParent() + File.separator + "pom.xml";
             OutputFormat format = OutputFormat.createPrettyPrint();
             XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(pomPath), format);
             xmlWriter.write(document);

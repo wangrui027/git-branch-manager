@@ -59,8 +59,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean cloneOrPull(GitProject gitProject) throws IOException, GitAPIException {
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName());
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName());
         if (!file.exists()) {
             logger.info("克隆仓库开始：{}", gitProject.getRemoteUrl());
             Git git = Git.cloneRepository()
@@ -101,8 +101,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
         gitProject.getModifiedSet().clear();
         gitProject.getMissingSet().clear();
         gitProject.getConflictingSet().clear();
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
             Git git = Git.open(file);
             /**
@@ -151,8 +151,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean createBranch(GitProject gitProject, String branchName) throws IOException, GitAPIException {
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
             logger.info("创建分支开始：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             Git git = Git.open(file);
@@ -167,8 +167,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public boolean switchBranch(GitProject gitProject, String branchName) throws GitAPIException, IOException {
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
             logger.info("切换分支开始：{}，分支：{}", gitProject.getRemoteUrl(), branchName);
             Git git = Git.open(file);
@@ -238,8 +238,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     @Override
     public boolean push(GitProject gitProject, String message) throws IOException, GitAPIException {
         logger.info("代码推送开始：{}，message：{}", gitProject.getRemoteUrl(), message);
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         Status status = git.status().call();
         /**
@@ -259,8 +259,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     @Override
     public boolean deleteBranch(GitProject gitProject) throws IOException, GitAPIException {
         logger.info("删除分支开始：{}，分支：{}", gitProject.getRemoteUrl(), gitProject.getCurrBranch());
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.checkout().setName("master").call();
         git.branchDelete().setBranchNames(gitProject.getCurrBranch()).setForce(true).call();
@@ -297,8 +297,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     @Override
     public boolean createTag(GitProject gitProject, String tagName, String tagLog) throws IOException, GitAPIException {
         logger.info("创建标签开始：{}，标签：{}", gitProject.getRemoteUrl(), tagLog);
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         git.tag().setName(tagName).setMessage(tagLog).call();
         git.push().setPushTags().setCredentialsProvider(reloadAllowHosts()).call();
@@ -312,8 +312,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     public void createBranchByTag(GitProject gitProject, String tagName, String branchName) throws IOException, GitAPIException {
         updateGitProjectInfo(gitProject);
         logger.info("从{}标签检出代码到{}分支，project：{}", tagName, branchName, gitProject.getRemoteUrl());
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         List<Ref> tagRefs = git.tagList().call();
         for (Ref tagRef : tagRefs) {
@@ -345,8 +345,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
 
     @Override
     public String getFileContent(GitProject gitProject, String fileName) throws IOException {
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + fileName);
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + fileName);
         String content = FileUtils.readFileToString(file, "UTF-8");
         return content;
     }
@@ -363,8 +363,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     @Override
     public boolean deleteTag(GitProject gitProject, String tagName) throws IOException, GitAPIException {
         logger.info("删除标签开始：{}，标签：{}", gitProject.getRemoteUrl(), tagName);
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         List<Ref> refs = git.tagList().call();
         git.tagDelete().setTags(tagName).call();
@@ -399,8 +399,8 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     @Override
     public boolean mergeBranch(GitProject gitProject, String currWorkBranch, String sourceBranch, String message) throws IOException, GitAPIException {
         logger.info("合并分支开始：{}，工作分支：{}，被合并分支{}", gitProject.getRemoteUrl(), currWorkBranch, sourceBranch);
-        String workHome = gitRepositoryConfig.getWorkHome();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        String modulesHome = gitRepositoryConfig.getModulesHome();
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         Git git = Git.open(file);
         Repository repo = git.getRepository();
         if (!repo.getBranch().equals(currWorkBranch)) {
@@ -424,9 +424,9 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
     public void getCommitLogs(Page<GitLog> page, String username, String projectName) throws IOException, GitAPIException {
         List<GitLog> logs = page.getAllData();
         List<GitProject> gitProjects = this.getAllGitProject();
-        String workHome = gitRepositoryConfig.getWorkHome();
+        String modulesHome = gitRepositoryConfig.getModulesHome();
         for (GitProject gitProject : gitProjects) {
-            File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+            File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
             Git git = Git.open(file);
             Iterable<RevCommit> it = git.log().call();
             for (RevCommit commit : it) {
@@ -487,12 +487,12 @@ public class GitRepositoryServiceImpl implements IGitRepositoryService {
      * @throws GitAPIException
      */
     public void getAllRemoteBranch(GitProject gitProject) throws GitAPIException, IOException {
-        String workHome = gitRepositoryConfig.getWorkHome();
+        String modulesHome = gitRepositoryConfig.getModulesHome();
         /**
          * 获取远程分支信息
          */
         gitProject.getBranchList().clear();
-        File file = new File(workHome + File.separator + gitProject.getName() + File.separator + ".git");
+        File file = new File(modulesHome + File.separator + gitProject.getName() + File.separator + ".git");
         if (file.exists()) {
             Git git = Git.open(file);
             List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();

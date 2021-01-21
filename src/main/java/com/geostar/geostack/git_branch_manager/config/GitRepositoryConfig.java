@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -13,6 +12,8 @@ import java.util.List;
 public class GitRepositoryConfig {
 
     private String workHome;
+
+    private String modulesHome;
 
     private final List<GitProject> gitProjects = new ArrayList<>();
 
@@ -24,30 +25,30 @@ public class GitRepositoryConfig {
         return workHome;
     }
 
-    public List<GitProject> getProjects() {
-        return gitProjects;
-    }
-
     public void setWorkHome(String workHome) {
         this.workHome = workHome;
     }
 
+    public String getModulesHome() {
+        return modulesHome;
+    }
+
+    public void setModulesHome(String modulesHome) {
+        this.modulesHome = modulesHome;
+    }
+
+    public List<GitProject> getProjects() {
+        return gitProjects;
+    }
+
     public void setProjects(List<String> projects) {
         gitProjects.clear();
-        String[] remoteUrls = new String[projects.size()];
-        projects.toArray(remoteUrls);
-        Arrays.sort(remoteUrls);
-        for (String url : remoteUrls) {
-            for (String remoteUrl : projects) {
-                if(url.equals(remoteUrl)){
-                    GitProject gitProject = new GitProject();
-                    String projectName = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length() - ".git".length());
-                    gitProject.setName(projectName);
-                    gitProject.setRemoteUrl(remoteUrl);
-                    gitProjects.add(gitProject);
-                    break;
-                }
-            }
+        for (String project : projects) {
+            GitProject gitProject = new GitProject();
+            String projectName = project.substring(project.lastIndexOf("/") + 1, project.length() - ".git".length());
+            gitProject.setName(projectName);
+            gitProject.setRemoteUrl(project);
+            gitProjects.add(gitProject);
         }
     }
 
