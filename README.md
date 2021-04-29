@@ -16,7 +16,7 @@
 
 ### 按钮说明
 
-1. 【帐号密码】：在程序启动之后第一件事应当是填写账号密码，用于和Git服务器交互，重启之后需再次填写，或在 application.yml 中写死
+1. 【帐号密码】：在程序启动之后第一件事应当是填写账号密码，用于和Git服务器交互，重启之后需再次填写，或在 **application.yml** 中写死
 2. 【拉取代码】：拉取当前分支最新代码，第一次直接克隆 **master** 分支
 3. 【创建分支】：以当前版本库创建新的分支或以某一标签为基础创建新的分支
 4. 【切换分支】：切换到指定分支并拉取最新代码
@@ -45,4 +45,4 @@
 
 ## 使用方法
 
-前往 [https://github.com/wangrui027/Git-branch-manager/releases](https://github.com/wangrui027/Git-branch-manager/releases) 下载发行版jar包 `java -jar xxx.jar` 运行，建议直接打开jar包修改 **application.yml** 中的配置想保存后使用
+下载发行版jar包 `java -jar git-branch-manager-xxx.jar` 运行，建议直接打开jar包修改 **application.yml** 中的配置项保存后使用
