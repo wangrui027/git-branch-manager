@@ -7,6 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
 
+/**
+ * 程序入口文件
+ *
+ * @author Nihaorz
+ */
 @SpringBootApplication
 public class GitBranchManagerApplication {
 
@@ -14,7 +19,7 @@ public class GitBranchManagerApplication {
         SpringApplication.run(GitBranchManagerApplication.class, args);
         try {
             MyConfig config = SpringUtils.getBean(MyConfig.class);
-            Runtime.getRuntime().exec("cmd /c start http://localhost:" + config.getPort());
+            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:" + config.getPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
