@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>geostack</groupId>
     <artifactId>git-branch-manager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>git-branch-manager</name>
     <description>Git分支管理程序</description>
