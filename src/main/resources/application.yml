@@ -2,7 +2,8 @@ server:
   port: 8090
 work-home: C:\代码批量管理
 logging:
-  file: ${work-home}\log.out
+  file:
+    path: ${work-home}\logs
 modules-home: ${work-home}\modules
 git-username:
 git-password:
