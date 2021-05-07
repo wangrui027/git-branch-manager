@@ -46,3 +46,8 @@
 ## 使用方法
 
 下载发行版jar包 `java -jar git-branch-manager-xxx.jar` 运行，建议直接打开jar包修改 **application.yml** 中的配置项保存后使用
+
+## 致谢
+
+感谢 [JetBrains]([JetBrains: Essential tools for software developers and teams](https://www.jetbrains.com/?from=git-branch-manager)) 对开源项目的支持
+
