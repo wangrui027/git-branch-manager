@@ -49,5 +49,5 @@
 
 ## 致谢
 
-感谢 [JetBrains]([JetBrains: Essential tools for software developers and teams](https://www.jetbrains.com/?from=git-branch-manager)) 对开源项目的支持
+感谢 [JetBrains](https://www.jetbrains.com/?from=git-branch-manager) 对开源项目的支持
 
